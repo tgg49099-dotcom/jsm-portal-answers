@@ -1,0 +1,68 @@
+{
+  "quoi": "Run of the two real tools of \"JSM Portal Answers\" against the real portal",
+  "date": "2026-11-18T13:45:48.695Z",
+  "site": "https://tgg-dev.atlassian.net",
+  "transport": "asUser() proxied to the REST API of the site with the caller credentials (the Forge runtime is not available outside a deployed function); every call is a GET, asApp() throws",
+  "appels": [
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttypegroup?limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    }
+  ],
+  "outils": {
+    "list_portal_request_types": {
+      "appel": {
+        "portal": "SUP"
+      },
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal\nQuestion: (every request type)\n\nPortal: Support (SUP)\n  Service desk id: 1 | project key: SUP | project type: service_desk\n  Categories of this portal: Common Requests, Computers, Logins and Accounts, Applications, Servers and Infrastructure\n  Request types (9):\n    - Get IT help [id 1]\n      you may raise it | status: OPEN | category: Common Requests, Computers | portal id: 1\n      Description: Get assistance for general IT problems and questions.\n    - Onboard new employees [id 4]\n      you may raise it | status: OPEN | category: Logins and Accounts | portal id: 1\n      Description: Request access for new employees.\n    - Report a system problem [id 8]\n      you may raise it | status: OPEN | category: Common Requests, Applications, Servers and Infrastructure | portal id: 1\n      Description: Let us know if something isn't working properly and we'll aim to get it back up and running quickly.\n    - Report broken hardware [id 9]\n      you may raise it | status: OPEN | category: Common Requests, Computers, Servers and Infrastructure | portal id: 1\n      Description: Report hardware that might be faulty or broken e.g. a broken computer screen or a damaged server.\n    - Request a new account [id 3]\n      you may raise it | status: OPEN | category: Common Requests, Logins and Accounts | portal id: 1\n      Description: Request a new account for a system.\n    - Request admin access [id 2]\n      you may raise it | status: OPEN | category: Logins and Accounts | portal id: 1\n      Description: For example, if you need to administer Jira.\n    - Request new hardware [id 6]\n      you may raise it | status: OPEN | category: Computers | portal id: 1\n      Description: For example, a new mouse or monitor.\n    - Request new software [id 5]\n      you may raise it | status: OPEN | category: Computers, Applications | portal id: 1\n      Description: If you need a software license, raise a request here.\n    - Emailed request [id 7]\n      you may raise it | status: OPEN | portal id: 1\n      Description: Request received from your email support channel.\n  Rules of this portal:\n    - a request can be raised on behalf of another person: yes\n    - participants can be added to a request: yes\n  SLA targets: the public JSM REST API does not expose the SLA targets of a portal (its only SLA endpoints describe one request that already exists). The fields of the form are described by the other tool, describe_request_type_form.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    },
+    "describe_request_type_form": {
+      "appel": {
+        "request_type": "Get IT help",
+        "portal": "SUP"
+      },
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal — the form of a request type\nPortal: Support (SUP)\nRequest type: Get IT help [id 1]\nDescription: Get assistance for general IT problems and questions.\n\nFields the customer sees (3):\n  - Summary [summary] — required, type: string\n  - Description [description] — optional, type: string\n  - Attachment [attachment] — optional, type: array\n\nRules of this portal, as the API reports them:\n  - a request can be raised on behalf of another person: yes\n  - participants can be added to a request: yes\n  - the SLA targets of the portal are not exposed by the public JSM REST API; the SLA line, when the portal has one, is the field marked above.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    }
+  }
+}
