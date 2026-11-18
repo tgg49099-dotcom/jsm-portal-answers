@@ -40,6 +40,7 @@
  * EXIT CODE: 0 when every check passes, 1 otherwise.
  */
 
+const fs = require('fs');
 const path = require('path');
 const Module = require('module');
 
@@ -353,6 +354,95 @@ async function principal() {
     contient(sortieInconnu, 'No request type was found') &&
       !contient(sortieInconnu, 'Request a new account') &&
       !contient(sortieInconnu, 'Request types (')
+  );
+
+  // --- 9. THE RESOLVER OF THE PAGE — the same answers, the same code ---------
+  const cheminResolver = path.join(path.dirname(fichier), 'resolvers.js');
+  if (!fs.existsSync(cheminResolver)) {
+    verifier('le resolver de la page existe', false, 'absent : ' + cheminResolver);
+    return rapporter();
+  }
+
+  let resolver;
+  try {
+    resolver = chargerAvecStub(cheminResolver);
+  } catch (e) {
+    verifier('le resolver de la page peut etre charge', false, e && e.message);
+    return rapporter();
+  }
+  verifier(
+    'le resolver exporte un handler',
+    resolver && typeof resolver.handler === 'function'
+  );
+
+  // 9.1 The page and the tools answer THE SAME THING.
+  repondu = fixtures.scenario('principal');
+  appels.length = 0;
+  const reponsePage = await resolver.handler({
+    call: { functionKey: 'resolver' },
+    payload: { action: 'types', portal: 'SUP', question: '' },
+    context: { accountId: 'compte-de-test' },
+  });
+  verifier(
+    'la page repond comme l\'outil (une seule implementation)',
+    reponsePage && reponsePage.ok === true &&
+      typeof reponsePage.answer === 'string' &&
+      contient(reponsePage.answer, 'Get IT help') &&
+      contient(reponsePage.answer, 'Rules of this portal:')
+  );
+
+  repondu = fixtures.scenario('principal');
+  const reponsePageForm = await resolver.handler({
+    call: { functionKey: 'resolver' },
+    payload: { action: 'form', request_type: 'Onboard new employees', portal: 'SUP' },
+    context: { accountId: 'compte-de-test' },
+  });
+  verifier(
+    'la page decrit le formulaire comme l\'outil',
+    reponsePageForm && reponsePageForm.ok === true &&
+      contient(reponsePageForm.answer, 'Employee start date') &&
+      contient(reponsePageForm.answer, 'required')
+  );
+
+  // 9.2 A call with NO identity reads NOTHING and is refused.
+  repondu = fixtures.scenario('principal');
+  appels.length = 0;
+  const reponseAnonyme = await resolver.handler({
+    call: { functionKey: 'resolver' },
+    payload: { action: 'types', portal: 'SUP' },
+    context: {},
+  });
+  verifier(
+    'un appel sans compte est refuse',
+    reponseAnonyme && reponseAnonyme.ok === false &&
+      reponseAnonyme.error === 'NOT_AUTHENTICATED'
+  );
+  verifier(
+    'un appel sans compte ne lit RIEN du site',
+    appels.length === 0,
+    'appels: ' + JSON.stringify(appels.map((a) => a.chemin))
+  );
+
+  // 9.3 The rendering call (no call at all) answers without reading.
+  repondu = fixtures.scenario('principal');
+  appels.length = 0;
+  const reponseRendu = await resolver.handler({}, {});
+  verifier(
+    'l\'affichage de la page ne lit rien',
+    reponseRendu && reponseRendu.ok === true && appels.length === 0
+  );
+
+  // 9.4 An unknown action is refused, not guessed.
+  repondu = fixtures.scenario('principal');
+  appels.length = 0;
+  const reponseInconnue = await resolver.handler({
+    call: { functionKey: 'resolver' },
+    payload: { action: 'supprimer-tout' },
+    context: { accountId: 'compte-de-test' },
+  });
+  verifier(
+    'une action inconnue est refusee, et rien n\'est lu',
+    reponseInconnue && reponseInconnue.ok === false && appels.length === 0
   );
 
   return rapporter();

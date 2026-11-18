@@ -13,10 +13,18 @@
 # Atlassian allows AT MOST ONE `rovo:mcp` module per app: this manifest
 # declares exactly one, with the two read-only tools listed below.
 #
-# MODULES — four entries, and nothing else:
+# MODULES — five entries, and nothing else:
 #
-#   * `function` — the two handlers behind the MCP tools (src/mcp.js). They
-#     are the ONLY code that reads the site.
+#   * `jira:globalPage` — the visible face of the app: a page in the "Apps"
+#     menu of the Jira navigation (/jira/apps/{appId}/{envId}), where a
+#     signed-in user asks the question. It is NOT the product: the product is
+#     the pair of MCP tools below. The page calls the resolver
+#     (src/resolvers.js), which calls the very same tools (src/mcp.js), so
+#     the two faces can never disagree. No `displayConditions`: the audience
+#     of this app is the CUSTOMER of the portal, not an administrator.
+#   * `function` — the resolver of the page (src/resolvers.js) and the two
+#     handlers behind the MCP tools (src/mcp.js). They are the ONLY code that
+#     reads the site.
 #   * `action` — the two tools themselves, declared `actionVerb: GET`, which
 #     is how a tool is declared READ-ONLY.
 #   * `rovo:mcp` — the Atlassian MCP server, which exposes those two tools.
@@ -52,7 +60,16 @@
 # The runtime stays nodejs24.x / 256 MB / arm64.
 
 modules:
+  jira:globalPage:
+    - key: pja-global-page
+      title: JSM Portal Answers
+      resource: page
+      resolver:
+        function: resolver
+      render: native
   function:
+    - key: resolver
+      handler: resolvers.handler
     - key: mcp-request-types
       handler: mcp.listPortalRequestTypes
     - key: mcp-request-form
@@ -119,6 +136,10 @@ modules:
 permissions:
   scopes:
     - read:servicedesk-request
+
+resources:
+  - key: page
+    path: src/frontend/page.jsx
 
 app:
   id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803

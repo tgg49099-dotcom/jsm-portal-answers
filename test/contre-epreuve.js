@@ -36,7 +36,9 @@ const RACINE = path.resolve(__dirname, '..');
 const HARNais = path.join(__dirname, 'harnais.js');
 
 /**
- * Copy the module and its sibling into a temporary directory.
+ * Copy the module, its sibling and the resolver of the page into a temporary
+ * directory. The resolver is copied too, because it calls the module under
+ * test: a sabotage that only breaks the tools must also break the page.
  *
  * @returns {string} the path of the copy of mcp.js
  */
@@ -44,6 +46,7 @@ function preparerCopie() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pja-sabotage-'));
   fs.copyFileSync(path.join(RACINE, 'src', 'mcp.js'), path.join(dir, 'mcp.js'));
   fs.copyFileSync(path.join(RACINE, 'src', 'jsm.js'), path.join(dir, 'jsm.js'));
+  fs.copyFileSync(path.join(RACINE, 'src', 'resolvers.js'), path.join(dir, 'resolvers.js'));
   return path.join(dir, 'mcp.js');
 }
 

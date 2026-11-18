@@ -38,6 +38,17 @@ Portal: Support (SUP)
     - participants can be added to a request: yes
 ```
 
+## The page: the same answers, in the browser
+
+The manifest also declares one `jira:globalPage` — a page in the **Apps** menu of the Jira
+navigation (`/jira/apps/{appId}/{envId}`). It is the visible face of the app: a signed-in user
+types a question about a customer portal and reads the answer.
+
+The page is **not** the product and has **no logic of its own**: its resolver (`src/resolvers.js`)
+calls the very same two tools, so the page and the MCP tools can never disagree. The page is not
+restricted to administrators (`displayConditions` is deliberately absent): the audience of this app
+is the customer of the portal, and a customer reads the answer with their own permissions.
+
 ## What it does **not** do — on purpose
 
 * **It never writes.** Every API call is a `GET`. `src/jsm.js` is the only file that talks to the
@@ -65,8 +76,11 @@ attachment, no user and no organisation.
 
 ## Privacy
 
-See [PRIVACY.md](./PRIVACY.md). Short version: the app stores nothing, sends nothing anywhere, and
-shows only what the person asking already has access to.
+The policy is kept in two places: [`PRIVACY.md`](./PRIVACY.md) in this repository, and the online
+page the developer-console sharing screen asks for, published at
+<https://tgg49099-dotcom.github.io/jsm-portal-answers/privacy.html> (built from
+[`docs/privacy.html`](./docs/privacy.html)). Short version: the app stores nothing, sends nothing
+anywhere, and shows only what the person asking already has access to.
 
 ## Install it
 
@@ -79,6 +93,8 @@ The app is free and has **no licence key**, so it can be shared with an installa
 
 A site administrator must enable the app in the **Atlassian MCP server** administration (external
 MCP exposure is off by default) before an MCP client can reach it.
+
+Once installed, the page is in the **Apps** menu of the Jira navigation.
 
 ## Develop it
 
@@ -105,7 +121,9 @@ A test that only ever sees the same answers can be passed by code that prints a 
 So the offline harness (`test/harnais.js`) stubs `@forge/api`, records **every** call, feeds
 fixtures captured live from the real JSM REST API, and runs the tools against **two different
 sites** (different portals, request types, fields, one restricted type, one hidden field). A
-hardcoded answer fails there.
+hardcoded answer fails there. The harness also runs the resolver of the page: the page must answer
+exactly what the tools answer, a call without a signed-in account must read nothing, and an unknown
+action must be refused.
 
 And the counter-proof (`test/contre-epreuve.js`) sabotages a **copy** of the module in three
 different ways — hardcoded request types, a constant answer, hardcoded fields — and requires the
@@ -118,13 +136,18 @@ read-only scope, no licence key in the manifest.
 ## Layout
 
 ```
-manifest.yml          one rovo:mcp module, two read-only actions, one read scope
+manifest.yml          one jira:globalPage, one rovo:mcp module, two read-only actions, one read scope
 src/mcp.js            the two tools (the only code an MCP client reaches)
 src/jsm.js            the only file that calls the Atlassian API — every call is a GET
-test/harnais.js       the offline harness (stubbed @forge/api, live fixtures)
+src/resolvers.js      the resolver of the page: it calls the two tools, nothing else
+src/frontend/page.jsx the page (UI Kit 2)
+src/frontend/api.js   the two calls the page can make
+src/frontend/bridge.js the transport to the resolver, offline-safe
+test/harnais.js       the offline harness (stubbed @forge/api, live fixtures, resolver checks)
 test/fixtures.js      fixtures captured live on 18/11/2026, with no personal data
 test/contre-epreuve.js the counter-proof: sabotage a copy, the harness must fail
 test/discipline.js    the static rules (asApp, storage, GET only, manifest shape)
+docs/privacy.html     the online privacy policy (GitHub Pages)
 ```
 
 ## Licence

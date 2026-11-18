@@ -39,10 +39,26 @@ function verifier(nom, condition, detail) {
 // The source code
 // ---------------------------------------------------------------------------
 
-const fichiersSource = fs
-  .readdirSync(path.join(RACINE, 'src'))
-  .filter((f) => f.endsWith('.js'))
-  .map((f) => ({ nom: f, texte: fs.readFileSync(path.join(RACINE, 'src', f), 'utf8') }));
+/**
+ * Every JavaScript file of the source, in every sub-directory.
+ *
+ * @param {string} dir
+ * @returns {string[]} the absolute paths
+ */
+function listerJs(dir) {
+  const sortie = [];
+  for (const nom of fs.readdirSync(dir)) {
+    const chemin = path.join(dir, nom);
+    if (fs.statSync(chemin).isDirectory()) sortie.push(...listerJs(chemin));
+    else if (nom.endsWith('.js')) sortie.push(chemin);
+  }
+  return sortie;
+}
+
+const fichiersSource = listerJs(path.join(RACINE, 'src')).map((chemin) => ({
+  nom: path.relative(path.join(RACINE, 'src'), chemin),
+  texte: fs.readFileSync(chemin, 'utf8'),
+}));
 
 /**
  * The code without its comments: a URL quoted in a comment is documentation,
@@ -173,6 +189,44 @@ verifier(
 verifier(
   'le manifeste ne declare aucun module public (webtrigger)',
   !Object.keys(modules).some((k) => k.includes('webtrigger'))
+);
+
+// ---------------------------------------------------------------------------
+// The page of the app: it is for the CUSTOMER of the portal, not for an
+// administrator. That is the promise the app makes — and the promise the
+// other app of the project breaks on purpose.
+// ---------------------------------------------------------------------------
+
+const pages = modules['jira:globalPage'] || [];
+verifier(
+  'le manifeste declare UNE page globale Jira',
+  pages.length === 1,
+  'declare: ' + JSON.stringify(pages.map((p) => p.key))
+);
+verifier(
+  'la page n\'est PAS reservee aux administrateurs',
+  pages.length === 1 &&
+    !pages[0].displayConditions &&
+    !(pages[0].displayConditions && pages[0].displayConditions.isAdmin === true),
+  'displayConditions: ' + JSON.stringify(pages.map((p) => p.displayConditions))
+);
+verifier(
+  'la page appelle un resolver declare dans le manifeste',
+  pages.length === 1 &&
+    pages[0].resolver &&
+    pages[0].resolver.function &&
+    (modules.function || []).some((f) => f.key === pages[0].resolver.function)
+);
+verifier(
+  'la page est rendue en UI Kit 2 (render: native)',
+  pages.length === 1 && pages[0].render === 'native'
+);
+verifier(
+  'la politique de confidentialite est livree avec l\'app (une page HTML)',
+  fs.existsSync(path.join(RACINE, 'docs', 'privacy.html')) &&
+    fs
+      .readFileSync(path.join(RACINE, 'docs', 'privacy.html'), 'utf8')
+      .includes('Stores or transmits personal data')
 );
 
 // ---------------------------------------------------------------------------
