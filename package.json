@@ -1,0 +1,23 @@
+{
+  "name": "jsm-portal-answers",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/mcp.js",
+  "dependencies": {
+    "@forge/api": "8.5.0"
+  },
+  "description": "JSM Portal Answers — read-only MCP tools that answer a customer's question about a Jira Service Management customer portal (request types, form fields, portal rules).",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "lint": "forge lint",
+    "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js",
+    "test:harnais": "node test/harnais.js",
+    "test:contre-epreuve": "node test/contre-epreuve.js",
+    "test:discipline": "node test/discipline.js"
+  },
+  "devDependencies": {
+    "js-yaml": "^5.5.0"
+  }
+}

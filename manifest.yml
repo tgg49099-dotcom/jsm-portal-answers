@@ -1,0 +1,131 @@
+# Forge manifest — "JSM Portal Answers"
+# App id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803
+#
+# WHAT THIS APP IS
+#
+# One app, one purpose: answer a CUSTOMER's question about a Jira Service
+# Management customer portal — "what can I ask for here?", "what do I have to
+# fill in?", "which category is this request in?" — with two read-only tools
+# exposed to the Atlassian MCP server through the official `rovo:mcp` module.
+#
+# The Codegeist 2026 bonus "Best app with Atlassian MCP" asks for "a Forge app
+# that exposes tools via the Atlassian MCP server using the rovo:mcp module".
+# Atlassian allows AT MOST ONE `rovo:mcp` module per app: this manifest
+# declares exactly one, with the two read-only tools listed below.
+#
+# MODULES — four entries, and nothing else:
+#
+#   * `function` — the two handlers behind the MCP tools (src/mcp.js). They
+#     are the ONLY code that reads the site.
+#   * `action` — the two tools themselves, declared `actionVerb: GET`, which
+#     is how a tool is declared READ-ONLY.
+#   * `rovo:mcp` — the Atlassian MCP server, which exposes those two tools.
+#
+# There is NO public trigger, NO web trigger and NO unauthenticated URL: every
+# module below is reachable only from an authenticated session, so this app
+# has no public URL and nothing to attack.
+#
+# IDENTITY — this app acts on behalf of a person, so it reads with `asUser()`.
+# The Marketplace security review ("Security requirements for cloud apps",
+# section "Forge apps") says:
+#
+#   1. "An application must default to using asUser() when performing an
+#      operation on behalf of the user."
+#   2. "Before making calls using asApp(), you must verify the expected
+#      permissions (for example, from product context) with the permissions
+#      REST APIs."
+#
+# Rule 1 is honoured everywhere: src/jsm.js contains ZERO `asApp()` call, and
+# the offline test (test/discipline.js) counts them. Rule 2 cannot apply here:
+# there is no wider identity to justify.
+#
+# THE SCOPE — ONE, and it is a READ scope:
+#
+#   read:servicedesk-request   (JSM request types, their categories and the
+#                                fields of their create forms)
+#
+# The app writes nothing, calls no external service, stores nothing, and
+# reads no issue, no comment, no attachment, no user and no organisation: it
+# reads request type metadata, and nothing else. The list of endpoints it
+# calls is written once, in src/jsm.js, and every one of them is a GET.
+#
+# The runtime stays nodejs24.x / 256 MB / arm64.
+
+modules:
+  function:
+    - key: mcp-request-types
+      handler: mcp.listPortalRequestTypes
+    - key: mcp-request-form
+      handler: mcp.describeRequestTypeForm
+  action:
+    - key: list_portal_request_types
+      name: List what a customer can ask for on a JSM portal
+      function: mcp-request-types
+      actionVerb: GET
+      description: >
+        Answers "what can I ask for on this portal?": lists the request types a
+        customer can raise, with their description, help text, category, whether
+        you may raise them, and the rules of the portal. Read with your own
+        permissions; nothing is stored.
+      inputs:
+        portal:
+          title: Portal
+          type: string
+          required: false
+          description: >
+            The customer portal to answer about, as a service desk id or a
+            project key, for example SUP. Leave it empty to get every portal of
+            the site.
+        question:
+          title: Words of the customer's question
+          type: string
+          required: false
+          description: >
+            Words taken from the customer's question, used to keep only the
+            request types whose name or description matches, for example "refund
+            invoice".
+    - key: describe_request_type_form
+      name: Describe the fields of a request type form
+      function: mcp-request-form
+      actionVerb: GET
+      description: >
+        Answers "what do I have to fill in?": describes the create form of a
+        request type — every field with its label, whether it is required, its
+        type, its help text and its possible values. Read with your own
+        permissions; nothing is written or stored.
+      inputs:
+        request_type:
+          title: Request type
+          type: string
+          required: true
+          description: >
+            The request type to describe, either its id (for example 1) or its
+            exact name (for example "Get IT help").
+        portal:
+          title: Portal
+          type: string
+          required: false
+          description: >
+            The customer portal the request type belongs to, as a service desk
+            id or a project key, for example SUP. Leave it empty to look for the
+            request type in every portal of the site.
+  rovo:mcp:
+    - key: pja-mcp
+      name: JSM Portal Answers
+      tools:
+        - list_portal_request_types
+        - describe_request_type_form
+
+permissions:
+  scopes:
+    - read:servicedesk-request
+
+app:
+  id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803
+  description: Answers a customer's question about a Jira Service Management
+    customer portal (request types, categories, form fields) through two
+    read-only Atlassian MCP tools; it reads only and never modifies anything.
+  runtime:
+    name: nodejs24.x
+    memoryMB: 256
+    architecture: arm64
