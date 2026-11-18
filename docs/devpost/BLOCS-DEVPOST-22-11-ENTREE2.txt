@@ -43,7 +43,7 @@ Submitted for the bonus "Best app with Atlassian MCP": a Forge app that exposes 
 The other submission of this project, "Portal Accessibility Checker for JSM", is substantially different:
 
 - Purpose: the other app audits a portal for WCAG 2.2 AA issues and returns findings to verify; this app reads the metadata of the portal and answers a customer's question.
-- Audience: the other app answers to Jira administrators and checks the administer permission; this app declares no administrator permission, and its page is visible to any signed-in user: its audience is the customer.
+- Audience: the other app answers to Jira administrators and checks the administer permission; this app declares no administrator permission. Its audience is whoever answers a customer: an agent, or an MCP client acting for them.
 - Data: the other app reads the content customers fill in and the issues of the site; this app reads request type metadata, categories and form fields, nothing else.
 - Code: two different code bases (this repository: tgg49099-dotcom/jsm-portal-answers), two different sets of handlers, no shared engine.
 - Outcome: a list of findings to review, against an answer an agent can relay to a customer.
@@ -104,7 +104,15 @@ https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/35d3cc79a90
 Gallery image 4 - the perimeter of the app: read only, asUser(), one read scope, no write, no storage, no public URL:
 https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/35d3cc79a90d796a72da725ed04f5c8436436706/docs/devpost/ENTREE2-IMAGES/entree2-perimetre-1500x1000.png
 
-Every image is computed from the files of the frozen commit by tools/generer-images-entree2.py, and tools/verifier-images-entree2.py checks that the result is identical byte for byte; each image names its source files and the commit they come from in its footer.
+Every image is computed from the files of the frozen commit by tools/generer-images-entree2.py, and tools/verifier-images-entree2.py checks that the result is identical pixel for pixel; each image names its source files and the commit they come from in its footer.
+
+md5 of the linked files, so the owner can check any download (md5sum on Linux):
+- entree2-vignette-1500x1000.png: 1eb84cd4c66111887e5b0f016b10fd6d
+- entree2-outils-1500x1000.png: 8caf86233c317d06488b5f75afb4b564
+- entree2-reponse-1500x1000.png: 4328b20d9314e284f5909275e041f442
+- entree2-types-1500x1000.png: 772ac9dbdbd66fb1a2b2d3e22a80a96f
+- entree2-perimetre-1500x1000.png: 09a41ba8cce1305900f9b62df0d333c2
+- run-outils-live-2026-11-18.json: 6f20b78a9bd220c502e2096813dafded
 === FIN VIGNETTE_ET_GALERIE ===
 
 ## A COMPLETER PAR LE PROPRIETAIRE
