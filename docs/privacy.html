@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy — JSM Portal Answers</title>
+<meta name="description" content="Privacy policy of the Forge app JSM Portal Answers: two read-only Atlassian MCP tools that answer a customer's question about a Jira Service Management customer portal.">
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         margin: 0; padding: 2rem 1rem; }
+  main { max-width: 46rem; margin: 0 auto; }
+  h1 { font-size: 1.7rem; margin-bottom: .2rem; }
+  h2 { font-size: 1.15rem; margin-top: 2rem; }
+  .meta { opacity: .75; font-size: .9rem; }
+  ul { padding-left: 1.2rem; }
+  li { margin: .35rem 0; }
+  code { background: rgba(127,127,127,.15); padding: .1rem .3rem; border-radius: 3px; font-size: .9em; }
+  .box { border: 1px solid rgba(127,127,127,.4); border-radius: 6px; padding: .2rem 1rem; margin: 1rem 0; }
+</style>
+</head>
+<body>
+<main>
+<h1>Privacy policy — JSM Portal Answers</h1>
+<p class="meta">Last updated: 18 November 2026. &nbsp;·&nbsp; Applies to the Forge app
+<b>JSM Portal Answers</b> and to the two Atlassian MCP tools it exposes.</p>
+
+<h2>1. What the app is</h2>
+<p>JSM Portal Answers is a Jira Service Management (JSM) Forge app that exposes two
+<b>read-only</b> tools to the Atlassian MCP server:</p>
+<ul>
+  <li><code>list_portal_request_types</code> — what a customer can ask for on a customer portal;</li>
+  <li><code>describe_request_type_form</code> — the fields of the create form of a request type.</li>
+</ul>
+<p>It declares a single permission scope, <code>read:servicedesk-request</code>, and it never writes
+anything.</p>
+
+<h2>2. Stores or transmits personal data?</h2>
+<div class="box"><b>No.</b> The app has no storage (no <code>storage</code>, no key-value store, no
+entities), writes nothing, and sends nothing to the developer, to a third party or to any external
+service. No analytics, no telemetry, no cookies.</div>
+
+<h2>3. What data does it read?</h2>
+<p>Only the metadata of the JSM customer portal of the site where the app is installed:</p>
+<ul>
+  <li>the customer portals of the site (service desk id, project key, project name);</li>
+  <li>the categories of a portal (request type groups);</li>
+  <li>the request types: name, description, help text, category, restriction status, and whether the
+      person asking may raise them;</li>
+  <li>the fields of the create form of a request type: label, required or not, type, help text,
+      possible values, default values.</li>
+</ul>
+<p>It reads <b>no</b> issue, no comment, no attachment, no user and no organisation. Every read is
+made with the identity of the person who called the tool, so a tool only ever shows what that
+person is already allowed to see in Jira Service Management.</p>
+
+<h2>4. Where is the data processed?</h2>
+<p>Only in the Atlassian tenant of the customer: inside the Forge runtime of the app and through
+the JSM Cloud REST API of the site where the app is installed. No data leaves that tenant, no
+service outside Atlassian is contacted.</p>
+
+<h2>5. How long is it retained?</h2>
+<p>Not at all. The app writes nothing, so there is nothing to export and nothing to erase. The answer
+returned by a tool lives only in the answer itself, which goes to the MCP client that asked for it;
+the app keeps no copy of it.</p>
+
+<h2>6. Third-party SDKs / data sharing?</h2>
+<p>None. The app has no third-party SDK, no analytics, no external API call and no cookie. Its only
+dependency is Atlassian's own <code>@forge/api</code>.</p>
+
+<h2>7. Access, correction, deletion</h2>
+<p>Because nothing is stored by the app, there is no personal data of yours held by the app to
+access, correct or delete. Uninstalling the app removes its installation entirely. The data it
+reads remains in your Jira Service Management site and stays under your own control.</p>
+
+<h2>8. Consent</h2>
+<p>The first call may require you to grant the app access to Jira Service Management on your site.
+Until you accept, the tools answer with an explicit refusal and read nothing.</p>
+
+<h2>9. Source and contact</h2>
+<p>The source code is public: <a href="https://github.com/tgg49099-dotcom/jsm-portal-answers">github.com/tgg49099-dotcom/jsm-portal-answers</a>.
+Questions: open an issue on that repository.</p>
+</main>
+</body>
+</html>
