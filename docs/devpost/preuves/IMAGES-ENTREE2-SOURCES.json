@@ -1,0 +1,139 @@
+{
+  "quoi": "Ce que chaque image de l'entree 2 dessine, et d'ou cela vient",
+  "commit_des_sources": "141179ea4efd3c792a5de49e9d3cdc5684db29e7",
+  "images": {
+    "entree2-vignette-1500x1000.png": {
+      "source_footer": "Source: run-outils-live-2026-11-18.json + manifest.yml + README.md - commit 141179ea4efd3c792a5de49e9d3cdc5684db29e7 - repo jsm-portal-answers - 18/11/2026",
+      "md5": "1eb84cd4c66111887e5b0f016b10fd6d",
+      "octets": 124164,
+      "dimensions": [
+        1500,
+        1000
+      ]
+    },
+    "entree2-outils-1500x1000.png": {
+      "source_footer": "Source: manifest.yml + run-outils-live-2026-11-18.json - commit 141179ea4efd3c792a5de49e9d3cdc5684db29e7 - repo jsm-portal-answers - 18/11/2026",
+      "md5": "8caf86233c317d06488b5f75afb4b564",
+      "octets": 104608,
+      "dimensions": [
+        1500,
+        1000
+      ]
+    },
+    "entree2-reponse-1500x1000.png": {
+      "source_footer": "Source: run-outils-live-2026-11-18.json - commit 141179ea4efd3c792a5de49e9d3cdc5684db29e7 - repo jsm-portal-answers - 18/11/2026",
+      "md5": "4328b20d9314e284f5909275e041f442",
+      "octets": 120240,
+      "dimensions": [
+        1500,
+        1000
+      ]
+    },
+    "entree2-types-1500x1000.png": {
+      "source_footer": "Source: run-outils-live-2026-11-18.json - commit 141179ea4efd3c792a5de49e9d3cdc5684db29e7 - repo jsm-portal-answers - 18/11/2026",
+      "md5": "772ac9dbdbd66fb1a2b2d3e22a80a96f",
+      "octets": 153065,
+      "dimensions": [
+        1500,
+        1000
+      ]
+    },
+    "entree2-perimetre-1500x1000.png": {
+      "source_footer": "Source: manifest.yml + README.md + run-outils-live-2026-11-18.json - commit 141179ea4efd3c792a5de49e9d3cdc5684db29e7 - repo jsm-portal-answers - 18/11/2026",
+      "md5": "09a41ba8cce1305900f9b62df0d333c2",
+      "octets": 127925,
+      "dimensions": [
+        1500,
+        1000
+      ]
+    }
+  },
+  "contenu": {
+    "entree2-vignette-1500x1000.png": {
+      "contenu": [],
+      "tokens": [
+        "rovo:mcp",
+        "actionVerb: GET",
+        "read:servicedesk-request",
+        "asUser()",
+        "asApp()",
+        "src/jsm.js"
+      ],
+      "origine": [
+        "docs/devpost/preuves/run-outils-live-2026-11-18.json",
+        "manifest.yml",
+        "README.md"
+      ]
+    },
+    "entree2-outils-1500x1000.png": {
+      "contenu": [
+        "list_portal_request_types",
+        "describe_request_type_form"
+      ],
+      "origine": [
+        "manifest.yml",
+        "docs/devpost/preuves/run-outils-live-2026-11-18.json"
+      ]
+    },
+    "entree2-reponse-1500x1000.png": {
+      "contenu": [
+        "JSM Portal Answers — read-only answers about a JSM customer portal — the form of a request type",
+        "Portal: Support (SUP)",
+        "Request type: Get IT help [id 1]",
+        "Description: Get assistance for general IT problems and questions.",
+        "",
+        "Fields the customer sees (3):",
+        "  - Summary [summary] — required, type: string",
+        "  - Description [description] — optional, type: string",
+        "  - Attachment [attachment] — optional, type: array",
+        "",
+        "Rules of this portal, as the API reports them:",
+        "  - a request can be raised on behalf of another person: yes",
+        "  - participants can be added to a request: yes",
+        "  - the SLA targets of the portal are not exposed by the public JSM REST API; the SLA line, when the portal has one, is the field marked above.",
+        "",
+        "Identity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+      ],
+      "origine": [
+        "docs/devpost/preuves/run-outils-live-2026-11-18.json"
+      ],
+      "verbatim": true
+    },
+    "entree2-types-1500x1000.png": {
+      "contenu": [
+        "- Get IT help [id 1]",
+        "- Onboard new employees [id 4]",
+        "- Report a system problem [id 8]",
+        "- Report broken hardware [id 9]",
+        "- Request a new account [id 3]",
+        "- Request admin access [id 2]",
+        "- Request new hardware [id 6]",
+        "- Request new software [id 5]",
+        "- Emailed request [id 7]"
+      ],
+      "origine": [
+        "docs/devpost/preuves/run-outils-live-2026-11-18.json"
+      ]
+    },
+    "entree2-perimetre-1500x1000.png": {
+      "contenu": [],
+      "tokens": [
+        "read:servicedesk-request",
+        "asUser()",
+        "asApp()",
+        "src/jsm.js",
+        "rovo:mcp",
+        "actionVerb: GET",
+        "jira:globalPage",
+        "nodejs24.x",
+        "web trigger",
+        "licence key"
+      ],
+      "origine": [
+        "manifest.yml",
+        "README.md",
+        "docs/devpost/preuves/run-outils-live-2026-11-18.json"
+      ]
+    }
+  }
+}

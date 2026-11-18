@@ -148,6 +148,18 @@ def main():
                 "not found: " + "; ".join(manque[:3]),
             )
 
+        # The paraphrased facts are checked by their identifiers: each token
+        # must really be in one of the files the image cites.
+        jetons = entree.get("tokens", [])
+        if jetons:
+            textes = "".join(lire(os.path.join(RACINE, o)) for o in entree["origine"])
+            absents = [t for t in jetons if t not in textes]
+            verifier(
+                nom + ": its %d identifiers are in the cited files" % len(jetons),
+                not absents,
+                "not found: " + ", ".join(absents[:3]),
+            )
+
     # 4 — the commit named in the footer really holds the cited files
     print("\n4. the commit named in the footers really holds the sources")
     try:
