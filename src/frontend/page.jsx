@@ -47,6 +47,28 @@ function readValue(event) {
 }
 
 /**
+ * The message shown when the app cannot answer.
+ *
+ * One case deserves its own words: the user has not yet allowed the app to
+ * read their Jira data. Jira then shows its own "allow access" screen (that
+ * screen appears because the app lets the error reach the platform — see
+ * src/jsm.js), and the user only has to allow it and ask again.
+ *
+ * @param {any} e
+ * @returns {string}
+ */
+function messageErreur(e) {
+  const message = (e && e.message) || String(e);
+  if (/authentication required/i.test(message)) {
+    return (
+      "Jira has not allowed this app to read your data yet. If Jira shows an " +
+      "\"Allow access\" prompt, accept it, then ask your question again."
+    );
+  }
+  return message;
+}
+
+/**
  * The answer, one line per row: a raw string with "\n" would be collapsed
  * by the renderer.
  *
@@ -82,7 +104,7 @@ function App() {
       const resultat = await fn(payload);
       setAnswer((resultat && resultat.answer) || "(the app answered nothing)");
     } catch (e) {
-      setError((e && e.message) || String(e));
+      setError(messageErreur(e));
     } finally {
       setBusy(false);
     }

@@ -1,6 +1,6 @@
 {
   "name": "jsm-portal-answers",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "main": "src/mcp.js",
   "dependencies": {
@@ -18,6 +18,8 @@
     "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js",
     "test:harnais": "node test/harnais.js",
     "test:formes": "node test/formes-plateforme.js",
+    "test:consentement": "node test/consentement.js",
+    "test:tout": "npm test && npm run test:formes && npm run test:consentement",
     "test:contre-epreuve": "node test/contre-epreuve.js",
     "test:discipline": "node test/discipline.js"
   },
