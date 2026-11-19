@@ -84,8 +84,11 @@ function actionConnue(action) {
  * @returns {string}
  */
 function actionDemandee(req) {
-  const payload = (req && req.payload) || {};
   const call = (req && req.call) || {};
+  // The platform delivers the payload of invoke() in req.call.payload
+  // (@forge/resolver 2.0.2 reads { call: { functionKey, payload, jobId } }).
+  // req.payload is the normalised shape (@forge/resolver / makeResolver).
+  const payload = call.payload || (req && req.payload) || {};
   const a = typeof payload.action === 'string' ? payload.action : '';
   if (actionConnue(a)) return a;
   const k = typeof call.functionKey === 'string' ? call.functionKey : '';
@@ -149,7 +152,7 @@ exports.handler = async function handler(req, runtimePayload) {
   if (!action) return Object.assign({}, REPONSE_FONCTION_INCONNUE);
   if (!identite(req, runtimePayload)) return Object.assign({}, REPONSE_NON_AUTHENTIFIE);
   try {
-    return await repondre(action, (req && req.payload) || {}, (req && req.context) || {});
+    return await repondre(action, call.payload || (req && req.payload) || {}, (req && req.context) || {});
   } catch (e) {
     return {
       ok: false,

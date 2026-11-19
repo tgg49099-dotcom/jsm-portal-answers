@@ -1,6 +1,6 @@
 {
   "name": "jsm-portal-answers",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "main": "src/mcp.js",
   "dependencies": {
@@ -17,6 +17,7 @@
     "lint": "forge lint",
     "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js",
     "test:harnais": "node test/harnais.js",
+    "test:formes": "node test/formes-plateforme.js",
     "test:contre-epreuve": "node test/contre-epreuve.js",
     "test:discipline": "node test/discipline.js"
   },
