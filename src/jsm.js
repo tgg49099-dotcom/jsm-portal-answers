@@ -79,6 +79,34 @@ function idValide(valeur) {
 }
 
 /**
+ * Is this the error that means "the user has not granted access to the app"?
+ *
+ * THE RULE, AS WRITTEN BY ATLASSIAN
+ * (developer.atlassian.com/platform/forge/apis-reference/fetch-api-product.requestjira/,
+ * read on 19 November 2026):
+ *
+ *   "If the API returns a 401 and there isn't a valid Authorization header,
+ *    then an Error is thrown."
+ *   "If this error isn't caught, the user is prompted to grant access to the
+ *    app."
+ *   "If the user grants access, the app is re-initialized."
+ *
+ * So THIS error must NOT be caught here: catching it would leave the user
+ * with no way to grant access to the app at all — the page would only say
+ * that "the API could not be read", and the app would look broken to the
+ * person who installs it. Every OTHER error is still handled here, and still
+ * answered in words.
+ *
+ * @param {unknown} e
+ * @returns {boolean}
+ */
+function erreurAutorisation(e) {
+  if (!e) return false;
+  if (typeof e.name === 'string' && e.name === 'NEEDS_AUTHENTICATION_ERR') return true;
+  return typeof e.message === 'string' && /authentication required/i.test(e.message);
+}
+
+/**
  * One GET, with the caller's own identity.
  *
  * The answer is always an object with the same shape, so the callers never
@@ -93,6 +121,9 @@ async function get(routeur) {
   try {
     res = await api.asUser().requestJira(routeur, { headers: JSM_HDRS });
   } catch (e) {
+    // The one error that must reach the platform: it is what makes Jira
+    // offer the user the "allow access" screen. See erreurAutorisation().
+    if (erreurAutorisation(e)) throw e;
     return {
       ok: false,
       status: 0,
@@ -219,4 +250,5 @@ module.exports = {
   champsDuFormulaire,
   valeurs,
   idValide,
+  erreurAutorisation,
 };

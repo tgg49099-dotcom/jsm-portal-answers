@@ -34,6 +34,7 @@
  */
 
 const mcp = require('./mcp.js');
+const jsm = require('./jsm.js');
 
 /**
  * The identity of the caller.
@@ -154,6 +155,12 @@ exports.handler = async function handler(req, runtimePayload) {
   try {
     return await repondre(action, call.payload || (req && req.payload) || {}, (req && req.context) || {});
   } catch (e) {
+    // The one error that must NOT be caught here: the error that means "the
+    // user has not granted access to the app". Atlassian's own rule (read on
+    // 19 November 2026): "If this error isn't caught, the user is prompted to
+    // grant access to the app." Swallowing it here would leave the person
+    // who opens the page with no way to allow the app to read their data.
+    if (jsm.erreurAutorisation(e)) throw e;
     return {
       ok: false,
       error: 'READ_FAILED',
