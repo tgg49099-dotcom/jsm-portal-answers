@@ -379,8 +379,7 @@ async function principal() {
   repondu = fixtures.scenario('principal');
   appels.length = 0;
   const reponsePage = await resolver.handler({
-    call: { functionKey: 'resolver' },
-    payload: { action: 'types', portal: 'SUP', question: '' },
+    call: { functionKey: 'resolver', payload: { action: 'types', portal: 'SUP', question: '' } },
     context: { accountId: 'compte-de-test' },
   });
   verifier(
@@ -393,8 +392,7 @@ async function principal() {
 
   repondu = fixtures.scenario('principal');
   const reponsePageForm = await resolver.handler({
-    call: { functionKey: 'resolver' },
-    payload: { action: 'form', request_type: 'Onboard new employees', portal: 'SUP' },
+    call: { functionKey: 'resolver', payload: { action: 'form', request_type: 'Onboard new employees', portal: 'SUP' } },
     context: { accountId: 'compte-de-test' },
   });
   verifier(
@@ -408,8 +406,7 @@ async function principal() {
   repondu = fixtures.scenario('principal');
   appels.length = 0;
   const reponseAnonyme = await resolver.handler({
-    call: { functionKey: 'resolver' },
-    payload: { action: 'types', portal: 'SUP' },
+    call: { functionKey: 'resolver', payload: { action: 'types', portal: 'SUP' } },
     context: {},
   });
   verifier(
@@ -436,8 +433,7 @@ async function principal() {
   repondu = fixtures.scenario('principal');
   appels.length = 0;
   const reponseInconnue = await resolver.handler({
-    call: { functionKey: 'resolver' },
-    payload: { action: 'supprimer-tout' },
+    call: { functionKey: 'resolver', payload: { action: 'supprimer-tout' } },
     context: { accountId: 'compte-de-test' },
   });
   verifier(
