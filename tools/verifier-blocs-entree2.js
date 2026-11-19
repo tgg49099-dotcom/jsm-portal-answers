@@ -9,7 +9,7 @@
  *   1. every block of the kit exists, and its content is under its limit;
  *   2. the table of the lengths of the blocks is printed (raw count);
  *   3. MOTS_CLES holds exactly 5 keywords;
- *   4. the two blocks that need a human gesture hold the one marker that is
+ *   4. the blocks that need a human gesture hold the one marker that is
  *      accepted, and no other block holds a marker;
  *   5. the text is ASCII (no accent, no typographic dash), and holds none of
  *      the forbidden words (TODO, FIXME, Lorem, compliance, compliant,
@@ -20,6 +20,24 @@
  * Usage:
  *   node tools/verifier-blocs-entree2.js [chemin-du-kit] [--http]
  * Exit code: 0 when every check passes, 1 otherwise.
+ *
+ * 19/11/2026 (slot 3) — check 4, the two legal states of the kit
+ * ------------------------------------------------------------------
+ * The rule used to be "VIDEO *and* LINK_INSTALLATION hold the marker, and the
+ * final list names the 2 blocks". That was true while the installation link
+ * was still missing. Since 19/11/2026 the signed installation URL produced by
+ * Atlassian is frozen in the kit (block LINK_INSTALLATION), so the kit is now
+ * in its "frozen" state and only VIDEO is left to fill. The old rule turned
+ * RED on the delivered kit for that reason alone (2 RED, both by design, the
+ * very same RED on the kit F and on the kit F2 — it never depended on the
+ * content of the blocks).
+ * The check now recognises the two states and demands exactly one of them:
+ *   "pending" — VIDEO and LINK_INSTALLATION hold the marker, the final list
+ *               names 2 blocks;
+ *   "frozen"  — LINK_INSTALLATION holds the signed Atlassian URL and no
+ *               marker, VIDEO alone holds the marker, the final list names
+ *               1 block (VIDEO).
+ * Any other state is RED. Nothing else in this file was touched.
  */
 
 const fs = require('fs');
@@ -168,13 +186,31 @@ async function principal() {
   const mots = (blocs.get('MOTS_CLES') || '').split(',').map((m) => m.trim()).filter(Boolean);
   verifier('MOTS_CLES contient exactement 5 mots cles (' + mots.length + ')', mots.length === 5, mots.join(', '));
 
-  console.log('\n3. les deux blocs a remplir par le proprietaire');
-  for (const nom of ['VIDEO', 'LINK_INSTALLATION']) {
-    const contenu = blocs.get(nom) || '';
+  console.log('\n3. les blocs a remplir par le proprietaire');
+  const urlLien = (blocs.get('LINK_INSTALLATION') || '').trim();
+  const etat = urlLien.startsWith(A_REMPLIR) ? 'en attente'
+    : urlLien.startsWith('https://developer.atlassian.com/console/install/') ? 'fige'
+    : 'inconnu';
+  console.log("  etat du kit : " + etat
+    + (etat === 'fige' ? " (le lien d'installation signe est deja dans le kit)" : ''));
+  const video = blocs.get('VIDEO') || '';
+  verifier(
+    'VIDEO porte le seul marqueur accepte',
+    video.startsWith(A_REMPLIR) && video.endsWith(']]') && video.split(A_REMPLIR).length === 2
+  );
+  if (etat === 'en attente') {
     verifier(
-      nom + ' porte le seul marqueur accepte',
-      contenu.startsWith(A_REMPLIR) && contenu.endsWith(']]') && contenu.split(A_REMPLIR).length === 2
+      'LINK_INSTALLATION porte le seul marqueur accepte',
+      urlLien.startsWith(A_REMPLIR) && urlLien.endsWith(']]') && urlLien.split(A_REMPLIR).length === 2
     );
+  } else if (etat === 'fige') {
+    verifier(
+      'LINK_INSTALLATION porte le lien signe d\'Atlassian, sans marqueur',
+      !urlLien.includes(A_REMPLIR) && !urlLien.includes(' ') && urlLien.endsWith('=')
+    );
+  } else {
+    verifier('LINK_INSTALLATION est soit un marqueur, soit le lien signe d\'Atlassian', false,
+      'contenu lu : ' + JSON.stringify(urlLien.slice(0, 60)));
   }
   for (const nom of ORDRE) {
     if (nom === 'VIDEO' || nom === 'LINK_INSTALLATION') continue;
@@ -182,10 +218,19 @@ async function principal() {
   }
   const fichier = fs.readFileSync(chemin, 'utf8');
   const section = fichier.split('## A COMPLETER PAR LE PROPRIETAIRE')[1] || '';
-  verifier(
-    "la section '## A COMPLETER PAR LE PROPRIETAIRE' liste les 2 blocs",
-    section.split('\n').filter((l) => l.trim().startsWith('- ')).length === 2
-  );
+  const puces = section.split('\n').filter((l) => l.trim().startsWith('- '));
+  if (etat === 'en attente') {
+    verifier(
+      "la section '## A COMPLETER PAR LE PROPRIETAIRE' liste les 2 blocs",
+      puces.length === 2
+    );
+  } else if (etat === 'fige') {
+    verifier(
+      "la section '## A COMPLETER PAR LE PROPRIETAIRE' liste le seul bloc VIDEO",
+      puces.length === 1 && puces[0].startsWith('- VIDEO'),
+      puces.length + ' puce(s)'
+    );
+  }
 
   console.log('\n4. le texte');
   let nonAscii = [];
