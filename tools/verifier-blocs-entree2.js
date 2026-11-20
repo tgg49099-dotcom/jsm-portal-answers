@@ -37,6 +37,9 @@
  *   "frozen"  — LINK_INSTALLATION holds the signed Atlassian URL and no
  *               marker, VIDEO alone holds the marker, the final list names
  *               1 block (VIDEO).
+ *   "complete" — the same as "frozen", and the VIDEO block now holds the
+ *               public YouTube URL of the video: no marker is left anywhere
+ *               in the kit, and the final section asks for nothing any more.
  * Any other state is RED. Nothing else in this file was touched.
  */
 
@@ -191,13 +194,24 @@ async function principal() {
   const etat = urlLien.startsWith(A_REMPLIR) ? 'en attente'
     : urlLien.startsWith('https://developer.atlassian.com/console/install/') ? 'fige'
     : 'inconnu';
-  console.log("  etat du kit : " + etat
-    + (etat === 'fige' ? " (le lien d'installation signe est deja dans le kit)" : ''));
   const video = blocs.get('VIDEO') || '';
-  verifier(
-    'VIDEO porte le seul marqueur accepte',
-    video.startsWith(A_REMPLIR) && video.endsWith(']]') && video.split(A_REMPLIR).length === 2
-  );
+  // 20/11/2026 (slot 3) : un troisieme etat, "complet" : le bloc VIDEO porte
+  // le lien public YouTube de la video. Aucun marqueur ne reste dans le kit et
+  // la liste finale ne demande plus rien a remplir.
+  const videoPublique = /^(https:\/\/(www\.)?youtube\.com\/watch\?v=|https:\/\/youtu\.be\/)[A-Za-z0-9_-]{6,}$/.test(video.trim());
+  const complet = etat === 'fige' && videoPublique;
+  console.log("  etat du kit : " + (complet ? 'complet' : etat)
+    + (etat === 'fige' ? " (le lien d'installation signe est deja dans le kit)" : '')
+    + (complet ? " (le bloc VIDEO porte le lien public YouTube)" : ''));
+  if (complet) {
+    verifier('VIDEO porte le lien public YouTube de la video, sans marqueur',
+      !video.includes(A_REMPLIR) && videoPublique, video.trim().slice(0, 60));
+  } else {
+    verifier(
+      'VIDEO porte le seul marqueur accepte',
+      video.startsWith(A_REMPLIR) && video.endsWith(']]') && video.split(A_REMPLIR).length === 2
+    );
+  }
   if (etat === 'en attente') {
     verifier(
       'LINK_INSTALLATION porte le seul marqueur accepte',
@@ -223,6 +237,15 @@ async function principal() {
     verifier(
       "la section '## A COMPLETER PAR LE PROPRIETAIRE' liste les 2 blocs",
       puces.length === 2
+    );
+  } else if (complet) {
+    verifier(
+      "le kit est complet : plus aucun marqueur a remplir",
+      !fichier.includes(A_REMPLIR)
+    );
+    verifier(
+      "la section '## A COMPLETER PAR LE PROPRIETAIRE' a ete retiree",
+      !fichier.includes('## A COMPLETER PAR LE PROPRIETAIRE')
     );
   } else if (etat === 'fige') {
     verifier(
