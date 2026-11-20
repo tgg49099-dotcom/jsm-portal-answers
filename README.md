@@ -82,6 +82,15 @@ page the developer-console sharing screen asks for, published at
 [`docs/privacy.html`](./docs/privacy.html)). Short version: the app stores nothing, sends nothing
 anywhere, and shows only what the person asking already has access to.
 
+## The demo video
+
+The demo video of the app is in this repository, in [`docs/devpost/video/`](./docs/devpost/video):
+an MP4 of **173 s** (below the 5-minute limit of the contest form), with the subtitles burned into
+the picture, plus the same subtitles as a `.srt` file. It shows the real deployed page in Jira,
+then the app's page re-rendered locally and running live against the customer's portal, then this
+repository. [`docs/devpost/video/README.md`](./docs/devpost/video/README.md) says exactly what is
+on each part of the picture.
+
 ## Install it
 
 The app is free and has **no licence key**, so it can be shared with an installation link:
@@ -148,6 +157,7 @@ test/fixtures.js      fixtures captured live on 18/11/2026, with no personal dat
 test/contre-epreuve.js the counter-proof: sabotage a copy, the harness must fail
 test/discipline.js    the static rules (asApp, storage, GET only, manifest shape)
 docs/privacy.html     the online privacy policy (GitHub Pages)
+docs/devpost/video/   the demo video (MP4 + subtitles) and what each part shows
 ```
 
 ## Licence
