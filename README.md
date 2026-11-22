@@ -162,5 +162,5 @@ docs/devpost/video/   the demo video (MP4 + subtitles) and what each part shows
 
 ## Licence
 
-The code is published as-is for the contest. It reads a public API of your own site and stores
-nothing.
+MIT (file `LICENSE` at the root of this repository). It reads a public API of your own site and
+stores nothing.
