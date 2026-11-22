@@ -22,13 +22,13 @@ JSM Portal Answers answers a customer's question about a Jira Service Management
 === FIN DESCRIPTION ===
 
 === DEBUT DESCRIPTION_ETENDUE ===
-list_portal_request_types answers "what can I ask for here?". It lists the request types a customer can raise on a portal: their description, their category, whether the caller may raise them, and the portal rules.
+Who it is for: on a Jira Service Management portal, whoever answers a customer (a support agent, or an AI agent working for them) often has to guess which request type fits and what its form will ask. A wrong guess means a request raised in the wrong place, or sent back for a missing field. JSM Portal Answers lets them read the answer from the portal itself, with the caller's own permissions.
 
-describe_request_type_form answers "what do I have to fill in?". It describes the create form of one request type: every field, with its label, whether it is required, its type, its help text and its possible values.
+list_portal_request_types answers "what can I ask for here?": the request types a customer can raise, with their description, category and portal rules. describe_request_type_form answers "what do I have to fill in?": every field of one form, with its label, whether it is required, its type, help text and possible values.
 
-Run on 18 November 2026 on a real JSM portal (the tools' code outside Forge, with the caller's own credentials): the first tool answered that the portal SUP has 9 request types and 5 categories; the second answered, for the request type "Get IT help", that the form has three fields (Summary, required; Description; Attachment), that a request can be raised on behalf of another person, and that participants can be added.
+Run on 18 November 2026 on a real JSM portal (the tools' code outside Forge): portal SUP has 9 request types and 5 categories; "Get IT help" has three fields (Summary, required; Description; Attachment).
 
-What the app does not do: it never writes (every call is a GET), stores nothing, calls no external service, and never uses the app's identity (every read goes through asUser()). It never claims what the API does not say: the SLA targets of a portal are not exposed by the public JSM REST API, and the tools say so instead of inventing one.
+It never writes (every call is a GET), stores nothing, calls no external service and reads only through asUser(). The answers are never hardcoded: a counter-proof sabotages the code three ways and the offline harness fails each time.
 === FIN DESCRIPTION_ETENDUE ===
 
 === DEBUT CATEGORIE ===

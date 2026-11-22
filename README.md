@@ -95,7 +95,7 @@ on each part of the picture.
 
 The app is free and has **no licence key**, so it can be shared with an installation link:
 
-1. Open the app's marketplace listing (or ask the author for the link).
+1. Open the installation link given in the contest entry.
 2. Choose the Jira Service Management site and accept the `read:servicedesk-request` scope.
 3. Ask your MCP client for the tools `list_portal_request_types` and
    `describe_request_type_form`.
