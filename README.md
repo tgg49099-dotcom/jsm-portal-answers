@@ -97,11 +97,17 @@ The app is free and has **no licence key**, so it can be shared with an installa
 
 1. Open the installation link given in the contest entry.
 2. Choose the Jira Service Management site and accept the `read:servicedesk-request` scope.
-3. Ask your MCP client for the tools `list_portal_request_types` and
+3. Open the app once, so it can ask for your consent: in Jira, the **Apps** menu ->
+   **JSM Portal Answers**. The first question shows Atlassian's consent screen - *"For JSM
+   Portal Answers to display, you need to grant it access to Atlassian apps on your behalf"* -
+   with an **Allow access** button. Click it once. The tools then read with your own
+   permissions, so there is nothing else to do.
+4. Ask your MCP client for the tools `list_portal_request_types` and
    `describe_request_type_form`.
 
 A site administrator must enable the app in the **Atlassian MCP server** administration (external
-MCP exposure is off by default) before an MCP client can reach it.
+MCP exposure is off by default) before an MCP client can reach it. The hosted MCP endpoint of the
+app is `https://mcp.atlassian.com/forge/<app id>`.
 
 Once installed, the page is in the **Apps** menu of the Jira navigation.
 
@@ -109,6 +115,7 @@ Once installed, the page is in the **Apps** menu of the Jira navigation.
 
 ```bash
 npm install
+npm install -g @forge/cli         # only for the lint step: the Forge CLI is not a dependency
 npm run lint                      # forge lint
 npm test                          # offline harness + counter-proof + static discipline
 ```
