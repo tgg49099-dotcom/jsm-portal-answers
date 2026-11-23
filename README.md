@@ -2,7 +2,7 @@
 
 **Two read-only Atlassian MCP tools that answer a customer's question about a Jira Service Management customer portal.**
 
-Built for the [Codegeist 2026](https://codegeist.atlassian.com/) contest — bonus track **"Best app with Atlassian MCP"**.
+Built for the [Codegeist 2026](https://codegeist2026.devpost.com/) contest — bonus track **"Best app with Atlassian MCP"**.
 
 A customer of a company writes to the service desk: *"can I ask for a refund here?"*, *"what do I have to
 fill in the form?"*, *"which documents do I need?"*. The answers already exist in the metadata of the
