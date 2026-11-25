@@ -25,6 +25,22 @@ words as one phrase, so when it finds nothing (for example "my laptop is broken"
 portal once more and lists the request types that contain at least one significant word, best match
 first, and says so in its answer (`test/question-mots.js`).
 
+Measured on the live portal, not only on fixtures (`tools/run-outils-live-questions.js`, proof kept in
+`docs/devpost/preuves/run-outils-live-questions-2026-11-25.json`, 14 GET calls, all HTTP 200):
+
+```
+Question: "my laptop is broken"
+
+  No request type contains the words "my laptop is broken" as one phrase (the server-side
+  searchQuery filter). These request types contain at least one of the words laptop, broken,
+  best match first:
+  Request types (1):
+    - Report broken hardware [id 9]
+```
+
+Without that fallback, the same question answered "Request types: none found for the words given" -
+which reads like a tool that does not work.
+
 Example answer of `list_portal_request_types` (a JSM site, portal `SUP`):
 
 ```
@@ -115,9 +131,10 @@ app is `https://mcp.atlassian.com/forge/<app id>`.
 Once installed, the page is in the **Apps** menu of the Jira navigation.
 
 **Which version you install:** the installation link gives you the app as deployed in
-**production 2.2.0** (19 November 2026). This commit is newer: it adds two improvements to the
-tools - every page of a list instead of the first one, and the multi-word fallback above -
-which are in the source here but not in 2.2.0.
+**production 2.3.0** (25 November 2026). That version carries the two improvements described
+above - every page of a list instead of the first one, and the multi-word fallback - and the
+source here is that same version: `manifest.yml` is unchanged, so the modules, the single
+`rovo:mcp` module and the single read-only scope are the ones you read about.
 
 ## Develop it
 
@@ -177,6 +194,10 @@ test/fixtures.js      fixtures captured live on 18/11/2026, with no personal dat
 test/contre-epreuve.js the counter-proof: sabotage a copy, the harness must fail
 test/discipline.js    the static rules (asApp, storage, GET only, manifest shape)
 test/pagination.js    every page of a paged list is read; its own counter-proof
+test/question-mots.js a question of several words finds its request type; its own counter-proof
+tools/run-tool-live.js         the two tools, run against the real portal (GET only)
+tools/run-outils-live-questions.js  the same tools, with the questions a judge asks
+docs/devpost/preuves/ the proofs of those live runs, kept in the repository
 docs/privacy.html     the online privacy policy (GitHub Pages)
 docs/devpost/video/   the demo video (MP4 + subtitles) and what each part shows
 ```
