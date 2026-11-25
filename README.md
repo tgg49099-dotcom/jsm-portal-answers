@@ -117,7 +117,7 @@ Once installed, the page is in the **Apps** menu of the Jira navigation.
 npm install
 npm install -g @forge/cli         # only for the lint step: the Forge CLI is not a dependency
 npm run lint                      # forge lint
-npm test                          # offline harness + counter-proof + static discipline
+npm test                          # offline harness + counter-proof + static discipline + pagination
 ```
 
 Deploy it to your own site:
@@ -145,6 +145,11 @@ And the counter-proof (`test/contre-epreuve.js`) sabotages a **copy** of the mod
 different ways — hardcoded request types, a constant answer, hardcoded fields — and requires the
 harness to **fail** on each sabotage. A test that passes on broken code proves nothing.
 
+`test/pagination.js` serves every list two items per page and requires the tools to read them
+all (5 request types, a type found by name on page 3, a portal on page 2), to stop an API that
+never ends after 20 pages and say the list is INCOMPLETE, and — its own counter-proof — to fail
+on a copy of `src/jsm.js` that reads only the first page.
+
 `test/discipline.js` checks the promises mechanically: zero `asApp()`, no storage, no external URL,
 only `GET`, exactly one `rovo:mcp` module with two tools, `actionVerb: GET` on every action, one
 read-only scope, no licence key in the manifest.
@@ -163,6 +168,7 @@ test/harnais.js       the offline harness (stubbed @forge/api, live fixtures, re
 test/fixtures.js      fixtures captured live on 18/11/2026, with no personal data
 test/contre-epreuve.js the counter-proof: sabotage a copy, the harness must fail
 test/discipline.js    the static rules (asApp, storage, GET only, manifest shape)
+test/pagination.js    every page of a paged list is read; its own counter-proof
 docs/privacy.html     the online privacy policy (GitHub Pages)
 docs/devpost/video/   the demo video (MP4 + subtitles) and what each part shows
 ```

@@ -142,6 +142,42 @@ async function get(routeur) {
 }
 
 /**
+ * Every page of a paged answer, not only the first one.
+ *
+ * The JSM REST API pages its lists (`start`, `limit`, `isLastPage`), and the
+ * server may return FEWER items than `limit` asks for. Reading only the first
+ * page would make a tool answer "Request types (50)" on a portal that has 60,
+ * and answer "no request type was found" for a type that sits on page 2. So
+ * the pages are followed while the API says `isLastPage: false`, up to
+ * PAGES_MAX pages; past that, the answer says it is incomplete
+ * (`tronque: true`) instead of pretending to be the whole list.
+ *
+ * @param {(start: string) => object} construire  builds the `route` of one page
+ * @returns {Promise<{ok: boolean, status: number, body: any, erreur: string|null}>}
+ */
+const PAGES_MAX = 20;
+
+async function toutesLesPages(construire) {
+  const tout = [];
+  let start = 0;
+  for (let page = 0; page < PAGES_MAX; page++) {
+    const rep = await get(construire(String(start)));
+    if (!rep.ok) {
+      // The first page decides; a later failure keeps what was read, marked incomplete.
+      if (page === 0) return rep;
+      return { ok: true, status: rep.status, body: { values: tout, size: tout.length, isLastPage: false, tronque: true }, erreur: null };
+    }
+    const vals = valeurs(rep.body);
+    for (const v of vals) tout.push(v);
+    if (!rep.body || rep.body.isLastPage !== false || vals.length === 0) {
+      return { ok: true, status: rep.status, body: { values: tout, size: tout.length, isLastPage: true }, erreur: null };
+    }
+    start += vals.length;
+  }
+  return { ok: true, status: 200, body: { values: tout, size: tout.length, isLastPage: false, tronque: true }, erreur: null };
+}
+
+/**
  * Is Jira Service Management active (and licensed) on this site?
  *
  * `GET /rest/servicedeskapi/info` needs no scope. Its `isLicensedForUse`
@@ -163,7 +199,7 @@ function etatJsm() {
  * @returns {Promise<{ok: boolean, status: number, body: any, erreur: string|null}>}
  */
 function portails() {
-  return get(route`/rest/servicedeskapi/servicedesk?limit=100`);
+  return toutesLesPages((start) => route`/rest/servicedeskapi/servicedesk?start=${start}&limit=100`);
 }
 
 /**
@@ -179,7 +215,7 @@ function groupes(serviceDeskId) {
   if (!idValide(serviceDeskId)) {
     return Promise.resolve({ ok: false, status: 0, body: null, erreur: 'identifiant invalide' });
   }
-  return get(route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttypegroup?limit=100`);
+  return toutesLesPages((start) => route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttypegroup?start=${start}&limit=100`);
 }
 
 /**
@@ -201,11 +237,11 @@ function typesDeDemande(serviceDeskId, recherche) {
   }
   const q = typeof recherche === 'string' ? recherche.trim() : '';
   if (!q) {
-    return get(route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttype?limit=100`);
+    return toutesLesPages((start) => route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttype?start=${start}&limit=100`);
   }
   // The query parameter is encoded by the `route` tag itself (it switches to
   // query mode after the `?` and applies encodeURIComponent to the values).
-  return get(route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttype?limit=100&searchQuery=${q}`);
+  return toutesLesPages((start) => route`/rest/servicedeskapi/servicedesk/${serviceDeskId}/requesttype?start=${start}&limit=100&searchQuery=${q}`);
 }
 
 /**
@@ -242,6 +278,16 @@ function valeurs(body) {
   return [];
 }
 
+/**
+ * Did the API stop before the end of the list (see toutesLesPages)?
+ *
+ * @param {any} body
+ * @returns {boolean}
+ */
+function incomplet(body) {
+  return Boolean(body && body.tronque === true);
+}
+
 module.exports = {
   etatJsm,
   portails,
@@ -249,6 +295,8 @@ module.exports = {
   typesDeDemande,
   champsDuFormulaire,
   valeurs,
+  incomplet,
   idValide,
+  PAGES_MAX,
   erreurAutorisation,
 };

@@ -321,7 +321,7 @@ async function listPortalRequestTypes(payload, context) {
       continue;
     }
 
-    lignes.push('  Request types (' + types.length + '):');
+    lignes.push('  Request types (' + types.length + (jsm.incomplet(repTypes.body) ? ' read; the API has more, this list is INCOMPLETE' : '') + '):');
     for (const rt of types) {
       const categorie = nommerGroupes(groupes, rt.groupIds);
       const flags = [];
@@ -445,7 +445,7 @@ async function describeRequestTypeForm(payload, context) {
   if (!trouveType) {
     return (
       REFUS_TYPE_ABSENT +
-      ' The request types of the portals of this site are: ' +
+      ' The portals searched are: ' +
       cibles
         .map((x) => x.projectName + ' (' + x.projectKey + ')')
         .join(', ') +

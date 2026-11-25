@@ -16,7 +16,8 @@
   },
   "scripts": {
     "lint": "forge lint",
-    "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js",
+    "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js && node test/pagination.js",
+    "test:pagination": "node test/pagination.js",
     "test:harnais": "node test/harnais.js",
     "test:formes": "node test/formes-plateforme.js",
     "test:consentement": "node test/consentement.js",
