@@ -15,7 +15,8 @@
  *      the forbidden words (TODO, FIXME, Lorem, compliance, compliant,
  *      conform, the ellipsis, the square brackets);
  *   6. every link of the kit is frozen on a 40-character commit SHA;
- *   7. with --http, every link of the kit answers HTTP 200.
+ *   7. with --http, every link of the kit answers HTTP 200, and in the
+ *      complete state the oEmbed of YouTube says the video exists and is public.
  *
  * Usage:
  *   node tools/verifier-blocs-entree2.js [chemin-du-kit] [--http]
@@ -304,6 +305,17 @@ async function principal() {
     for (const [nom, lien] of tous) {
       const code = await codeHttp(lien);
       verifier(nom + ' -> ' + code + ' ' + lien.slice(0, 90), code === 200);
+    }
+    // 24/11/2026 (Studio) : youtube.com/watch repond 200 meme pour un
+    // identifiant qui n'existe pas (mesure avec XXXXXXXXXXX). Seul l'oEmbed
+    // officiel dit si la video existe ET est publique (200 ; 400/404 sinon,
+    // 401/403 si elle est privee).
+    if (complet) {
+      const oembed = 'https://www.youtube.com/oembed?format=json&url='
+        + encodeURIComponent(video.trim());
+      const code = await codeHttp(oembed);
+      verifier('VIDEO existe et est publique (oEmbed YouTube) -> ' + code, code === 200,
+        video.trim().slice(0, 60));
     }
   } else {
     console.log('\n6. le code HTTP de chaque lien : non demande (option --http)');

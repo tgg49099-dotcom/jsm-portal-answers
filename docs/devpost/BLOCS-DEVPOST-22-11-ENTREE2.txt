@@ -3,7 +3,7 @@ BLOCS DEVPOST - CODEGEIST 2026 - ENTREE 2 - "JSM Portal Answers"
 
 Application : ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803
 Depot       : https://github.com/tgg49099-dotcom/jsm-portal-answers
-Commit fige : 52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed (les liens d'images de ce
+Commit fige : 171ce966941fd72a8dfbce5e6606b8537c977f8f (les liens d'images de ce
               fichier pointent sur ce commit, jamais sur une branche qui bouge)
 Ecrit le    : 18/11/2026 par le slot 3, a partir des fichiers du depot et de
               la preuve du direct du 18/11/2026 (docs/devpost/preuves/run-outils-live-2026-11-18.json)
@@ -55,9 +55,9 @@ This app declares one rovo:mcp module, two read-only tools (actionVerb: GET), an
 
 === DEBUT LIENS ===
 Repository (source, manifest, tests): https://github.com/tgg49099-dotcom/jsm-portal-answers
-Frozen commit of this entry (every link below points to this commit, not to a moving branch): https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed
-The live proof of the two tools (the run of 18 November 2026 against a real portal, with the list of the HTTP calls): https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/preuves/run-outils-live-2026-11-18.json
-The generator and the verifier of the gallery images: https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/tools
+Frozen commit of this entry (every link below points to this commit, not to a moving branch): https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/171ce966941fd72a8dfbce5e6606b8537c977f8f
+The live proof of the two tools (the run of 18 November 2026 against a real portal, with the list of the HTTP calls): https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/preuves/run-outils-live-2026-11-18.json
+The generator and the verifier of the gallery images: https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/171ce966941fd72a8dfbce5e6606b8537c977f8f/tools
 Privacy policy (published, answers HTTP 200): https://tgg49099-dotcom.github.io/jsm-portal-answers/privacy.html
 In the browser, after install: Jira, Apps menu, "JSM Portal Answers".
 No codelab: this entry is a Forge app; the repository holds the source, the manifest, the offline test harness (36 checks, a counter-proof and 25 static rules) and the proof of the live run.
@@ -92,19 +92,19 @@ Application id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803. T
 
 === DEBUT VIGNETTE_ET_GALERIE ===
 Thumbnail (3:2, 1500 x 1000 pixels, PNG) - the two tools, and the facts of the app:
-https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/ENTREE2-IMAGES/entree2-vignette-1500x1000.png
+https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/ENTREE2-IMAGES/entree2-vignette-1500x1000.png
 
 Gallery image 1 - the two tools of the rovo:mcp module, with their real inputs and their real outputs:
-https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/ENTREE2-IMAGES/entree2-outils-1500x1000.png
+https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/ENTREE2-IMAGES/entree2-outils-1500x1000.png
 
 Gallery image 2 - a real answer of describe_request_type_form, taken verbatim from the live run of 18 November 2026:
-https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/ENTREE2-IMAGES/entree2-reponse-1500x1000.png
+https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/ENTREE2-IMAGES/entree2-reponse-1500x1000.png
 
 Gallery image 3 - the request types of the real portal SUP, read live on 18 November 2026:
-https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/ENTREE2-IMAGES/entree2-types-1500x1000.png
+https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/ENTREE2-IMAGES/entree2-types-1500x1000.png
 
 Gallery image 4 - the perimeter of the app: read only, asUser(), one read scope, no write, no storage, no public URL:
-https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52a37f9dd9a7cbe33c9963fc53a3b10c21f172ed/docs/devpost/ENTREE2-IMAGES/entree2-perimetre-1500x1000.png
+https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/ENTREE2-IMAGES/entree2-perimetre-1500x1000.png
 
 Every image is computed from the files of the frozen commit by tools/generer-images-entree2.py, and tools/verifier-images-entree2.py checks that the result is identical pixel for pixel; each image names its source files and the commit they come from in its footer.
 
