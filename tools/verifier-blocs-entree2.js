@@ -304,7 +304,18 @@ async function principal() {
     console.log('\n6. le code HTTP de chaque lien');
     for (const [nom, lien] of tous) {
       const code = await codeHttp(lien);
-      verifier(nom + ' -> ' + code + ' ' + lien.slice(0, 90), code === 200);
+      // 25/11/2026 (slot 3, cycle 278) : l'URL youtube.com/watch d'une video
+      // REELLEMENT publique repond 302 (redirection vers la page « sorry » de
+      // Google) depuis un centre de donnees. Mesure du jour, 4 identifiants :
+      // les 3 videos de la chaine (JAEoj9jpHMg, UMMxnlxkEi0, KV9WrWV5h7k) et
+      // un identifiant INEXISTANT (XXXXXXXXXXX) — les 4 repondent 302. Ce code
+      // ne dit donc RIEN de l'existence de la video : le controle de ces
+      // liens est l'oEmbed (200 = la video existe ET est publique), et le code
+      // HTTP de l'URL watch est accepte a 200 OU en redirection.
+      const estWatch = /^https:\/\/(www\.)?youtube\.com\/watch\?v=/.test(lien)
+        || /^https:\/\/youtu\.be\//.test(lien);
+      const ok = estWatch ? (code === 200 || (code >= 300 && code < 400)) : code === 200;
+      verifier(nom + ' -> ' + code + ' ' + lien.slice(0, 90), ok);
     }
     // 24/11/2026 (Studio) : youtube.com/watch repond 200 meme pour un
     // identifiant qui n'existe pas (mesure avec XXXXXXXXXXX). Seul l'oEmbed
