@@ -1,0 +1,110 @@
+{
+  "quoi": "Run of the two real tools of \"JSM Portal Answers\" against the real portal, with the questions a judge asks (several words, one phrase)",
+  "date": "2026-11-25T21:18:52.029Z",
+  "site": "https://tgg-dev.atlassian.net",
+  "transport": "asUser() proxied to the REST API of the site with the caller credentials; every call is a GET, asApp() throws",
+  "questions": [
+    "plusieurs_mots",
+    "phrase_exacte"
+  ],
+  "appels": [
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttypegroup?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100&searchQuery=my%20laptop%20is%20broken",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/9/field",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttypegroup?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100&searchQuery=Get%20IT%20help",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    }
+  ],
+  "outils": {
+    "plusieurs_mots": {
+      "appel": {
+        "portal": "SUP",
+        "question": "my laptop is broken"
+      },
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal\nQuestion: \"my laptop is broken\"\n\nPortal: Support (SUP)\n  Service desk id: 1 | project key: SUP | project type: service_desk\n  Categories of this portal: Common Requests, Computers, Logins and Accounts, Applications, Servers and Infrastructure\n  No request type contains the words \"my laptop is broken\" as one phrase (the server-side searchQuery filter). These request types contain at least one of the words laptop, broken, best match first:\n  Request types (1):\n    - Report broken hardware [id 9]\n      you may raise it | status: OPEN | category: Common Requests, Computers, Servers and Infrastructure | portal id: 1\n      Description: Report hardware that might be faulty or broken e.g. a broken computer screen or a damaged server.\n  Rules of this portal:\n    - a request can be raised on behalf of another person: yes\n    - participants can be added to a request: yes\n  SLA targets: the public JSM REST API does not expose the SLA targets of a portal (its only SLA endpoints describe one request that already exists). The fields of the form are described by the other tool, describe_request_type_form.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    },
+    "phrase_exacte": {
+      "appel": {
+        "portal": "SUP",
+        "question": "Get IT help"
+      },
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal\nQuestion: \"Get IT help\"\n\nPortal: Support (SUP)\n  Service desk id: 1 | project key: SUP | project type: service_desk\n  Categories of this portal: Common Requests, Computers, Logins and Accounts, Applications, Servers and Infrastructure\n  Request types (1):\n    - Get IT help [id 1]\n      you may raise it | status: OPEN | category: Common Requests, Computers | portal id: 1\n      Description: Get assistance for general IT problems and questions.\n  Rules of this portal:\n    - a request can be raised on behalf of another person: yes\n    - participants can be added to a request: yes\n  SLA targets: the public JSM REST API does not expose the SLA targets of a portal (its only SLA endpoints describe one request that already exists). The fields of the form are described by the other tool, describe_request_type_form.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    },
+    "formulaire": {
+      "appel": {
+        "request_type": "Get IT help",
+        "portal": "SUP"
+      },
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal — the form of a request type\nPortal: Support (SUP)\nRequest type: Get IT help [id 1]\nDescription: Get assistance for general IT problems and questions.\n\nFields the customer sees (3):\n  - Summary [summary] — required, type: string\n  - Description [description] — optional, type: string\n  - Attachment [attachment] — optional, type: array\n\nRules of this portal, as the API reports them:\n  - a request can be raised on behalf of another person: yes\n  - participants can be added to a request: yes\n  - the SLA targets of the portal are not exposed by the public JSM REST API; the SLA line, when the portal has one, is the field marked above.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    }
+  }
+}
