@@ -20,7 +20,10 @@ can answer the question from the real portal instead of guessing.
 | `describe_request_type_form` | "What do I have to fill in?" | every field of the create form: label, required/optional, type, help text, possible values, default values |
 
 Both tools accept a `portal` (service desk id or project key) and, for the first one, the `question`
-words, which are passed to the **server-side** `searchQuery` filter of the JSM API.
+words, which are passed to the **server-side** `searchQuery` filter of the JSM API. That filter matches the
+words as one phrase, so when it finds nothing (for example "my laptop is broken"), the tool reads the
+portal once more and lists the request types that contain at least one significant word, best match
+first, and says so in its answer (`test/question-mots.js`).
 
 Example answer of `list_portal_request_types` (a JSM site, portal `SUP`):
 

@@ -206,6 +206,34 @@ function ligneIdentite() {
  * @param {string} demande  the portal asked for (id or project key), or ''
  * @returns {any|null}
  */
+/**
+ * The significant words of a customer's question, for the fallback of tool 1.
+ *
+ * Lower case, letters and digits only, 3 characters or more, without the
+ * small words that would match every request type ("the", "for", "how"...),
+ * at most 8 words, each one once.
+ *
+ * @param {string} question
+ * @returns {string[]}
+ */
+const MOTS_VIDES = new Set([
+  'the', 'and', 'for', 'how', 'can', 'what', 'with', 'from', 'into', 'about', 'this', 'that',
+  'you', 'your', 'our', 'are', 'was', 'not', 'need', 'want', 'please', 'does', 'have', 'has',
+  'les', 'des', 'une', 'pour', 'avec', 'comment', 'est', 'que', 'qui', 'mon', 'mes', 'der',
+  'die', 'das', 'und', 'ein', 'eine', 'ich', 'wie',
+]);
+
+function motsSignificatifs(question) {
+  const t = typeof question === 'string' ? question.toLowerCase() : '';
+  const mots = [];
+  for (const m of t.split(/[^\p{L}\p{N}]+/u)) {
+    if (m.length < 3 || MOTS_VIDES.has(m) || mots.includes(m)) continue;
+    mots.push(m);
+    if (mots.length >= 8) break;
+  }
+  return mots;
+}
+
 function trouverPortail(listePortails, demande) {
   if (!demande) return null;
   const d = demande.trim().toLowerCase();
@@ -305,7 +333,37 @@ async function listPortalRequestTypes(payload, context) {
       lignes.push('');
       continue;
     }
-    const types = jsm.valeurs(repTypes.body);
+    let types = jsm.valeurs(repTypes.body);
+    let repTypesLus = repTypes;
+    let motsRepli = [];
+
+    // The server-side `searchQuery` filter matches the words AS ONE STRING:
+    // "broken laptop" finds nothing on a portal whose type is "Report broken
+    // hardware". An agent passes several words of the customer's question,
+    // so an empty answer is not the end: the whole portal is read once more
+    // (same GET, same identity, no filter) and the request types that
+    // contain AT LEAST ONE significant word are listed, best match first,
+    // and the answer says so. See motsSignificatifs() and test/question-mots.js.
+    if (!types.length && question) {
+      motsRepli = motsSignificatifs(question);
+      if (motsRepli.length) {
+        const repTous = await jsm.typesDeDemande(sdId, '');
+        if (repTous.ok) {
+          const classes = [];
+          for (const rt of jsm.valeurs(repTous.body)) {
+            const texte = [rt && rt.name, rt && rt.description, rt && rt.helpText]
+              .filter((x) => typeof x === 'string')
+              .join(' ')
+              .toLowerCase();
+            const n = motsRepli.filter((m) => texte.includes(m)).length;
+            if (n > 0) classes.push({ rt, n });
+          }
+          classes.sort((a, b) => b.n - a.n);
+          types = classes.map((c) => c.rt);
+          repTypesLus = repTous;
+        }
+      }
+    }
 
     if (groupes.length) {
       lignes.push('  Categories of this portal: ' + groupes.map((g) => g.name).join(', '));
@@ -321,7 +379,14 @@ async function listPortalRequestTypes(payload, context) {
       continue;
     }
 
-    lignes.push('  Request types (' + types.length + (jsm.incomplet(repTypes.body) ? ' read; the API has more, this list is INCOMPLETE' : '') + '):');
+    if (motsRepli.length) {
+      lignes.push(
+        '  No request type contains the words "' + tronquer(question, 160) + '" as one phrase (the ' +
+        'server-side searchQuery filter). These request types contain at least one of the words ' +
+        motsRepli.join(', ') + ', best match first:'
+      );
+    }
+    lignes.push('  Request types (' + types.length + (jsm.incomplet(repTypesLus.body) ? ' read; the API has more, this list is INCOMPLETE' : '') + '):');
     for (const rt of types) {
       const categorie = nommerGroupes(groupes, rt.groupIds);
       const flags = [];
@@ -533,4 +598,5 @@ exports._tronquer = tronquer;
 exports._valeursPossibles = valeursPossibles;
 exports._nommerGroupes = nommerGroupes;
 exports._trouverPortail = trouverPortail;
+exports._motsSignificatifs = motsSignificatifs;
 exports._refusAutorisation = refusAutorisation;
