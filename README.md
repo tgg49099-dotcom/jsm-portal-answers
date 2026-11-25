@@ -114,6 +114,11 @@ app is `https://mcp.atlassian.com/forge/<app id>`.
 
 Once installed, the page is in the **Apps** menu of the Jira navigation.
 
+**Which version you install:** the installation link gives you the app as deployed in
+**production 2.2.0** (19 November 2026). This commit is newer: it adds two improvements to the
+tools - every page of a list instead of the first one, and the multi-word fallback above -
+which are in the source here but not in 2.2.0.
+
 ## Develop it
 
 ```bash
