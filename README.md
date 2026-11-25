@@ -41,6 +41,12 @@ Question: "my laptop is broken"
 Without that fallback, the same question answered "Request types: none found for the words given" -
 which reads like a tool that does not work.
 
+The second tool takes an id or the exact name of a request type. An agent rarely has the exact
+name, so when the name given is not exact and exactly one request type of the portals read has a
+name that contains it (for example "IT help" for "Get IT help"), that form is described and the
+answer says so; when several are close, nothing is guessed: they are listed with their id, so the
+agent can ask again (`test/nom-approche.js`).
+
 Example answer of `list_portal_request_types` (a JSM site, portal `SUP`):
 
 ```
@@ -195,6 +201,7 @@ test/contre-epreuve.js the counter-proof: sabotage a copy, the harness must fail
 test/discipline.js    the static rules (asApp, storage, GET only, manifest shape)
 test/pagination.js    every page of a paged list is read; its own counter-proof
 test/question-mots.js a question of several words finds its request type; its own counter-proof
+test/nom-approche.js  tool 2 with a name that is not exact; its own counter-proof
 tools/run-tool-live.js         the two tools, run against the real portal (GET only)
 tools/run-outils-live-questions.js  the same tools, with the questions a judge asks
 docs/devpost/preuves/ the proofs of those live runs, kept in the repository

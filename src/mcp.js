@@ -485,9 +485,10 @@ async function describeRequestTypeForm(payload, context) {
     cibles = [trouve];
   }
 
-  // The request type is looked for by id first, then by name.
+  // The request type is looked for by id first, then by exact name.
   let trouveType = null;
   let portailType = null;
+  const lus = []; // every request type read, with its portal, for the fallback below
   for (const portail of cibles) {
     const repTypes = await jsm.typesDeDemande(portail.id, '');
     if (!repTypes.ok) {
@@ -495,6 +496,7 @@ async function describeRequestTypeForm(payload, context) {
       continue;
     }
     const types = jsm.valeurs(repTypes.body);
+    for (const t of types) if (t && typeof t === 'object') lus.push({ t, portail });
     const parId = types.find((t) => String(t.id) === demande);
     const parNom = types.find(
       (t) => String(t.name || '').toLowerCase() === demande.toLowerCase()
@@ -507,15 +509,56 @@ async function describeRequestTypeForm(payload, context) {
     }
   }
 
+  // An agent rarely has the EXACT name: it passes "broken hardware" for
+  // "Report broken hardware", or "IT help" for "Get IT help". Before this
+  // fallback, the tool answered "No request type was found" although the
+  // type was on the portal. Now: when exactly ONE request type has a name
+  // that contains the words given, it is described, and the answer says so;
+  // when several are close, they are listed with their id and portal, so the
+  // agent can ask again with an id. Nothing else is read for this: it uses
+  // the lists already read above (same GETs, same identity).
+  // See test/nom-approche.js.
+  let ligneApproche = '';
   if (!trouveType) {
-    return (
-      REFUS_TYPE_ABSENT +
-      ' The portals searched are: ' +
-      cibles
-        .map((x) => x.projectName + ' (' + x.projectKey + ')')
-        .join(', ') +
-      '. Nothing was written and nothing was stored.'
-    );
+    const d = demande.toLowerCase().replace(/\s+/g, ' ');
+    const contient = lus.filter(({ t }) => String(t.name || '').toLowerCase().replace(/\s+/g, ' ').includes(d));
+    if (contient.length === 1) {
+      trouveType = contient[0].t;
+      portailType = contient[0].portail;
+      ligneApproche =
+        'No request type is named exactly "' + tronquer(demande, 80) + '"; the only one whose name ' +
+        'contains these words is "' + trouveType.name + '", described below.';
+    } else {
+      let proches = contient.map((x) => ({ ...x, n: 99 }));
+      if (!proches.length) {
+        const mots = motsSignificatifs(demande);
+        proches = lus
+          .map((x) => {
+            const nom = String(x.t.name || '').toLowerCase();
+            return { ...x, n: mots.filter((m) => nom.includes(m)).length };
+          })
+          .filter((x) => x.n > 0)
+          .sort((a, b) => b.n - a.n);
+      }
+      const liste = proches.slice(0, 10).map(
+        (x) => '"' + x.t.name + '" [id ' + x.t.id + '] in ' + (x.portail.projectName || '') +
+          (x.portail.projectKey ? ' (' + x.portail.projectKey + ')' : '')
+      );
+      return (
+        REFUS_TYPE_ABSENT +
+        ' The portals searched are: ' +
+        cibles
+          .map((x) => x.projectName + ' (' + x.projectKey + ')')
+          .join(', ') +
+        '.' +
+        (liste.length
+          ? ' The closest request types are: ' + liste.join('; ') +
+            (proches.length > liste.length ? ' (and ' + (proches.length - liste.length) + ' more)' : '') +
+            '. Ask again with one of these ids.'
+          : '') +
+        ' Nothing was written and nothing was stored.'
+      );
+    }
   }
 
   const repChamps = await jsm.champsDuFormulaire(portailType.id, trouveType.id);
@@ -529,6 +572,7 @@ async function describeRequestTypeForm(payload, context) {
   const lignes = [];
   lignes.push(TITRE + ' — the form of a request type');
   lignes.push('Portal: ' + (portailType.projectName || '') + (portailType.projectKey ? ' (' + portailType.projectKey + ')' : ''));
+  if (ligneApproche) lignes.push(ligneApproche);
   lignes.push('Request type: ' + trouveType.name + ' [id ' + trouveType.id + ']');
   if (trouveType.description) lignes.push('Description: ' + tronquer(trouveType.description, 240));
   if (trouveType.helpText) lignes.push('Help: ' + tronquer(trouveType.helpText, 240));
