@@ -26,7 +26,7 @@ portal once more and lists the request types that contain at least one significa
 first, and says so in its answer (`test/question-mots.js`).
 
 Measured on the live portal, not only on fixtures (`tools/run-outils-live-questions.js`, proof kept in
-`docs/devpost/preuves/run-outils-live-questions-2026-11-25.json`, 14 GET calls, all HTTP 200):
+`docs/devpost/preuves/run-outils-live-questions-2026-11-25.json`, 15 GET calls, all HTTP 200):
 
 ```
 Question: "my laptop is broken"
@@ -202,6 +202,7 @@ test/discipline.js    the static rules (asApp, storage, GET only, manifest shape
 test/pagination.js    every page of a paged list is read; its own counter-proof
 test/question-mots.js a question of several words finds its request type; its own counter-proof
 test/nom-approche.js  tool 2 with a name that is not exact; its own counter-proof
+test/preuve-live.js   the README and the live proof files give the same number of GET calls; its own counter-proof
 tools/run-tool-live.js         the two tools, run against the real portal (GET only)
 tools/run-outils-live-questions.js  the same tools, with the questions a judge asks
 docs/devpost/preuves/ the proofs of those live runs, kept in the repository

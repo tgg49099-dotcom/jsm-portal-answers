@@ -16,7 +16,7 @@
   },
   "scripts": {
     "lint": "forge lint",
-    "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js && node test/pagination.js && node test/question-mots.js && node test/nom-approche.js",
+    "test": "node test/harnais.js && node test/contre-epreuve.js && node test/discipline.js && node test/pagination.js && node test/question-mots.js && node test/nom-approche.js && node test/preuve-live.js",
     "test:mots": "node test/question-mots.js",
     "test:nom": "node test/nom-approche.js",
     "test:pagination": "node test/pagination.js",
