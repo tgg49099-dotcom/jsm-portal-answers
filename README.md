@@ -49,8 +49,8 @@ agent can ask again (`test/nom-approche.js`).
 
 Measured on the live portal, not only on fixtures (`tools/run-outils-live-nom-approche.js`, proof
 kept in `docs/devpost/preuves/run-outils-live-nom-approche-2026-11-26.json`, 11 GET calls, all HTTP 200).
-This run uses the code of this repository; the production deployment named below does not carry
-this change yet.
+This run uses the code of this repository; the production deployment named below has carried
+this change since 26 November 2026.
 
 ```
 Name given: "IT help"
@@ -160,11 +160,11 @@ app is `https://mcp.atlassian.com/forge/<app id>`.
 Once installed, the page is in the **Apps** menu of the Jira navigation.
 
 **Which version you install:** the installation link gives you the app as deployed in
-**production 2.3.0** (25 November 2026). That version carries the two improvements described
-above - every page of a list instead of the first one, and the multi-word fallback - and the
-source here is that same version **plus the close-name lookup of the second tool, which is not
-deployed yet**: `manifest.yml` is unchanged, so the modules, the single `rovo:mcp` module and
-the single read-only scope are the ones you read about.
+**production 2.4.0** (26 November 2026). That version carries the three improvements named
+here - every page of a list instead of the first one, the multi-word fallback, and the
+close-name lookup of the second tool - and the source here is that same version:
+`manifest.yml` is unchanged, so the modules, the single `rovo:mcp` module and the single
+read-only scope are the ones you read about.
 
 ## Develop it
 
