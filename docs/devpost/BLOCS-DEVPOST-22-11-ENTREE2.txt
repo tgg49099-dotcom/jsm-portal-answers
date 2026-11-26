@@ -5,6 +5,9 @@ Application : ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803
 Depot       : https://github.com/tgg49099-dotcom/jsm-portal-answers
 Commit fige : 171ce966941fd72a8dfbce5e6606b8537c977f8f (les liens d'images de ce
               fichier pointent sur ce commit, jamais sur une branche qui bouge)
+Commit du code : 52f3b2553bce9c827ee04029af115fe15deea33a (les liens du bloc LIENS
+              pointent sur ce commit ; revu le 26/11/2026 par le Studio : version de
+              production 2.3.0, preuves des 25 et 26/11, recherche par plusieurs mots)
 Ecrit le    : 18/11/2026 par le slot 3, a partir des fichiers du depot et de
               la preuve du direct du 18/11/2026 (docs/devpost/preuves/run-outils-live-2026-11-18.json)
 Un bloc reste a remplir par le proprietaire (VIDEO) : il est marque
@@ -22,11 +25,11 @@ JSM Portal Answers answers a customer's question about a Jira Service Management
 === FIN DESCRIPTION ===
 
 === DEBUT DESCRIPTION_ETENDUE ===
-Who it is for: on a Jira Service Management portal, whoever answers a customer (a support agent, or an AI agent working for them) often has to guess which request type fits and what its form will ask. A wrong guess means a request raised in the wrong place, or sent back for a missing field. JSM Portal Answers lets them read the answer from the portal itself, with the caller's own permissions.
+Who it is for: on a Jira Service Management portal, whoever answers a customer (a support agent, or an AI agent working for them) has to guess which request type fits and what its form will ask. A wrong guess means a request raised in the wrong place, or sent back for a missing field. JSM Portal Answers reads the answer from the portal itself, with the caller's own permissions.
 
-list_portal_request_types answers "what can I ask for here?": the request types a customer can raise, with their description, category and portal rules. describe_request_type_form answers "what do I have to fill in?": every field of one form, with its label, whether it is required, its type, help text and possible values.
+list_portal_request_types answers "what can I ask for here?". describe_request_type_form answers "what do I have to fill in?": every field of one form, required or not, with its help text and possible values.
 
-Run on 18 November 2026 on a real JSM portal (the tools' code outside Forge): portal SUP has 9 request types and 5 categories; "Get IT help" has three fields (Summary, required; Description; Attachment).
+A real question on a real portal (25 November 2026): "my laptop is broken" matches no request type as one phrase, so the tool reads the portal once more and answers "Report broken hardware", and says how it found it. Before that change the same question answered "none found".
 
 It never writes (every call is a GET), stores nothing, calls no external service and reads only through asUser(). The answers are never hardcoded: a counter-proof sabotages the code three ways and the offline harness fails each time.
 === FIN DESCRIPTION_ETENDUE ===
@@ -55,12 +58,15 @@ This app declares one rovo:mcp module, two read-only tools (actionVerb: GET), an
 
 === DEBUT LIENS ===
 Repository (source, manifest, tests): https://github.com/tgg49099-dotcom/jsm-portal-answers
-Frozen commit of this entry (every link below points to this commit, not to a moving branch): https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/171ce966941fd72a8dfbce5e6606b8537c977f8f
-The live proof of the two tools (the run of 18 November 2026 against a real portal, with the list of the HTTP calls): https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/171ce966941fd72a8dfbce5e6606b8537c977f8f/docs/devpost/preuves/run-outils-live-2026-11-18.json
-The generator and the verifier of the gallery images: https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/171ce966941fd72a8dfbce5e6606b8537c977f8f/tools
+Frozen commit of the code of this entry (every link below points to this commit, not to a moving branch): https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/52f3b2553bce9c827ee04029af115fe15deea33a
+The live proofs of the two tools, each with the list of its HTTP calls:
+- a judge's questions, among them "my laptop is broken" (25 November 2026), 15 GET calls, all HTTP 200: https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52f3b2553bce9c827ee04029af115fe15deea33a/docs/devpost/preuves/run-outils-live-questions-2026-11-25.json
+- request type names that are not exact, such as "IT help" (26 November 2026, code of the repository, not deployed yet), 11 GET calls, all HTTP 200: https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52f3b2553bce9c827ee04029af115fe15deea33a/docs/devpost/preuves/run-outils-live-nom-approche-2026-11-26.json
+- the first run of the two tools (18 November 2026): https://raw.githubusercontent.com/tgg49099-dotcom/jsm-portal-answers/52f3b2553bce9c827ee04029af115fe15deea33a/docs/devpost/preuves/run-outils-live-2026-11-18.json
+The generator and the verifier of the gallery images: https://github.com/tgg49099-dotcom/jsm-portal-answers/tree/52f3b2553bce9c827ee04029af115fe15deea33a/tools
 Privacy policy (published, answers HTTP 200): https://tgg49099-dotcom.github.io/jsm-portal-answers/privacy.html
 In the browser, after install: Jira, Apps menu, "JSM Portal Answers".
-No codelab: this entry is a Forge app; the repository holds the source, the manifest, the offline test harness (36 checks, a counter-proof and 25 static rules) and the proof of the live run.
+No codelab: this entry is a Forge app; the repository holds the source, the manifest, the offline tests (a harness of 36 checks fed with the answers of two different portals, a counter-proof that sabotages the code three ways, 25 static rules, and one test per improvement, each with its own counter-proof) and the proofs of the live runs.
 === FIN LIENS ===
 
 === DEBUT VIDEO ===
@@ -71,7 +77,7 @@ No codelab: this entry is a Forge app; the repository holds the source, the mani
 1. Open the installation link of this app (the block below), choose the Jira Service Management site to install it on, and accept the read scope read:servicedesk-request.
 2. Open the app once in Jira. The site records your consent for Jira Service Management that way, and the tools read with your own permissions, so nothing else is needed. The first opening shows Atlassian's consent screen: click "Allow access" once.
 3. A site administrator must enable the app in the Atlassian MCP server administration of the site: external MCP exposure is off by default on a site. After that step, any MCP client can call the two tools.
-4. Ask the MCP client for list_portal_request_types and describe_request_type_form. The first takes an optional portal (a service desk id or a project key such as SUP) and optional question words, which are passed to the server-side search filter of the JSM API. The second takes the request type, by id (1) or by exact name ("Get IT help"), and an optional portal.
+4. Ask the MCP client for list_portal_request_types and describe_request_type_form. The first takes an optional portal (a service desk id or a project key such as SUP) and optional question words, which are passed to the server-side search filter of the JSM API. The second takes the request type, by id (1) or by exact name ("Get IT help"), and an optional portal. The source of the repository also accepts a close name such as "IT help"; that change is not deployed yet.
 5. The answer arrives as text. Nothing is written and nothing is stored.
 6. The same two answers are in the browser: in Jira, open the Apps menu and choose "JSM Portal Answers". The page calls the very same tools, so it cannot disagree with them.
 
@@ -87,7 +93,7 @@ Stack: Atlassian Forge, one rovo:mcp module, two read-only actions (actionVerb: 
 
 Main technology requirement: it is a Forge app that integrates with two Atlassian capabilities: Jira Service Management, whose customer portal it reads, and Rovo, whose MCP server carries its two tools through the official rovo:mcp module.
 
-Application id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803. The version in production is 2.2.0, deployed on 19 November 2026 and installed on the test site. The app was registered for this contest and has never been published to the Marketplace.
+Application id: ari:cloud:ecosystem::app/c88fa86b-4c89-4634-9d08-53f3cdfab803. The version in production is 2.3.0, deployed on 25 November 2026 and installed on the test site; it reads every page of a list and carries the multi-word fallback. The close-name lookup of the second tool is in the repository and not deployed yet. The app was registered for this contest and has never been published to the Marketplace.
 === FIN TECH ===
 
 === DEBUT VIGNETTE_ET_GALERIE ===

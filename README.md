@@ -226,7 +226,7 @@ test/discipline.js    the static rules (asApp, storage, GET only, manifest shape
 test/pagination.js    every page of a paged list is read; its own counter-proof
 test/question-mots.js a question of several words finds its request type; its own counter-proof
 test/nom-approche.js  tool 2 with a name that is not exact; its own counter-proof
-test/preuve-live.js   the README and the live proof files give the same number of GET calls; its own counter-proof
+test/preuve-live.js   the README, the Devpost kit and the live proof files give the same number of GET calls and the same production version; its own counter-proof
 tools/run-tool-live.js         the two tools, run against the real portal (GET only)
 tools/run-outils-live-questions.js  the same tools, with the questions a judge asks
 tools/run-outils-live-nom-approche.js  the second tool, with request type names that are not exact
