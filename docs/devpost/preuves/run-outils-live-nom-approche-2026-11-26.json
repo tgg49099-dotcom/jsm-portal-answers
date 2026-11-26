@@ -1,0 +1,94 @@
+{
+  "quoi": "Run of the real second tool of \"JSM Portal Answers\" against the real portal, with request type names that are not exact",
+  "date": "2026-11-26T05:41:40.064Z",
+  "site": "https://tgg-dev.atlassian.net",
+  "transport": "asUser() proxied to the REST API of the site with the caller credentials; every call is a GET, asApp() throws",
+  "cas": [
+    "nom_exact",
+    "nom_proche_un_seul",
+    "nom_proche_plusieurs"
+  ],
+  "appels": [
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype/1/field",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/info",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk?start=0&limit=100",
+      "status": 200
+    },
+    {
+      "methode": "GET",
+      "chemin": "/rest/servicedeskapi/servicedesk/1/requesttype?start=0&limit=100",
+      "status": 200
+    }
+  ],
+  "outils": {
+    "nom_exact": {
+      "appel": {
+        "request_type": "Get IT help",
+        "portal": "SUP"
+      },
+      "attendu": "the exact form",
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal — the form of a request type\nPortal: Support (SUP)\nRequest type: Get IT help [id 1]\nDescription: Get assistance for general IT problems and questions.\n\nFields the customer sees (3):\n  - Summary [summary] — required, type: string\n  - Description [description] — optional, type: string\n  - Attachment [attachment] — optional, type: array\n\nRules of this portal, as the API reports them:\n  - a request can be raised on behalf of another person: yes\n  - participants can be added to a request: yes\n  - the SLA targets of the portal are not exposed by the public JSM REST API; the SLA line, when the portal has one, is the field marked above.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    },
+    "nom_proche_un_seul": {
+      "appel": {
+        "request_type": "IT help",
+        "portal": "SUP"
+      },
+      "attendu": "the close form, described and said not to be exact",
+      "reponse": "JSM Portal Answers — read-only answers about a JSM customer portal — the form of a request type\nPortal: Support (SUP)\nNo request type is named exactly \"IT help\"; the only one whose name contains these words is \"Get IT help\", described below.\nRequest type: Get IT help [id 1]\nDescription: Get assistance for general IT problems and questions.\n\nFields the customer sees (3):\n  - Summary [summary] — required, type: string\n  - Description [description] — optional, type: string\n  - Attachment [attachment] — optional, type: array\n\nRules of this portal, as the API reports them:\n  - a request can be raised on behalf of another person: yes\n  - participants can be added to a request: yes\n  - the SLA targets of the portal are not exposed by the public JSM REST API; the SLA line, when the portal has one, is the field marked above.\n\nIdentity: the portal was read with your own Jira permissions, so you see the request types you are allowed to see. Nothing was written, nothing was stored."
+    },
+    "nom_proche_plusieurs": {
+      "appel": {
+        "request_type": "Request",
+        "portal": "SUP"
+      },
+      "attendu": "the close forms, listed with their id, nothing guessed",
+      "reponse": "No request type was found with that name. Give the id of a request type (for example 1) or its exact name (for example \"Get IT help\"), and the portal it belongs to (a service desk id or a project key, for example SUP). The portals searched are: Support (SUP). The closest request types are: \"Request a new account\" [id 3] in Support (SUP); \"Request admin access\" [id 2] in Support (SUP); \"Request new hardware\" [id 6] in Support (SUP); \"Request new software\" [id 5] in Support (SUP); \"Emailed request\" [id 7] in Support (SUP). Ask again with one of these ids. Nothing was written and nothing was stored."
+    }
+  }
+}

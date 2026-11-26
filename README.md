@@ -47,6 +47,29 @@ name that contains it (for example "IT help" for "Get IT help"), that form is de
 answer says so; when several are close, nothing is guessed: they are listed with their id, so the
 agent can ask again (`test/nom-approche.js`).
 
+Measured on the live portal, not only on fixtures (`tools/run-outils-live-nom-approche.js`, proof
+kept in `docs/devpost/preuves/run-outils-live-nom-approche-2026-11-26.json`, 11 GET calls, all HTTP 200).
+This run uses the code of this repository; the production deployment named below does not carry
+this change yet.
+
+```
+Name given: "IT help"
+
+  No request type is named exactly "IT help"; the only one whose name contains these words is
+  "Get IT help", described below.
+Request type: Get IT help [id 1]
+Description: Get assistance for general IT problems and questions.
+```
+
+```
+Name given: "Request"
+
+  No request type was found with that name. ... The closest request types are: "Request a new
+  account" [id 3] in Support (SUP); "Request admin access" [id 2] in Support (SUP); "Request new
+  hardware" [id 6] in Support (SUP); "Request new software" [id 5] in Support (SUP); "Emailed
+  request" [id 7] in Support (SUP). Ask again with one of these ids.
+```
+
 Example answer of `list_portal_request_types` (a JSM site, portal `SUP`):
 
 ```
@@ -139,8 +162,9 @@ Once installed, the page is in the **Apps** menu of the Jira navigation.
 **Which version you install:** the installation link gives you the app as deployed in
 **production 2.3.0** (25 November 2026). That version carries the two improvements described
 above - every page of a list instead of the first one, and the multi-word fallback - and the
-source here is that same version: `manifest.yml` is unchanged, so the modules, the single
-`rovo:mcp` module and the single read-only scope are the ones you read about.
+source here is that same version **plus the close-name lookup of the second tool, which is not
+deployed yet**: `manifest.yml` is unchanged, so the modules, the single `rovo:mcp` module and
+the single read-only scope are the ones you read about.
 
 ## Develop it
 
@@ -205,6 +229,7 @@ test/nom-approche.js  tool 2 with a name that is not exact; its own counter-proo
 test/preuve-live.js   the README and the live proof files give the same number of GET calls; its own counter-proof
 tools/run-tool-live.js         the two tools, run against the real portal (GET only)
 tools/run-outils-live-questions.js  the same tools, with the questions a judge asks
+tools/run-outils-live-nom-approche.js  the second tool, with request type names that are not exact
 docs/devpost/preuves/ the proofs of those live runs, kept in the repository
 docs/privacy.html     the online privacy policy (GitHub Pages)
 docs/devpost/video/   the demo video (MP4 + subtitles) and what each part shows
