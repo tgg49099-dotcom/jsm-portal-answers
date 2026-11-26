@@ -6,11 +6,13 @@ Depot       : https://github.com/tgg49099-dotcom/jsm-portal-answers
 Commit fige : 171ce966941fd72a8dfbce5e6606b8537c977f8f (les liens d'images de ce
               fichier pointent sur ce commit, jamais sur une branche qui bouge)
 Commit du code : 52f3b2553bce9c827ee04029af115fe15deea33a (les liens du bloc LIENS
-              pointent sur ce commit ; revu le 26/11/2026 par le Studio ; le code de
-              l'application y est celui de la production 2.4.0 du 26/11/2026 : preuves
-              des 25 et 26/11, recherche par plusieurs mots)
+              pointent sur ce commit ; le code de l'application y est celui de la
+              production 2.4.0 du 26/11/2026 : preuves des 25 et 26/11, recherche par
+              plusieurs mots)
 Ecrit le    : 18/11/2026 par le slot 3, a partir des fichiers du depot et de
               la preuve du direct du 18/11/2026 (docs/devpost/preuves/run-outils-live-2026-11-18.json)
+              ; reecrit le 26/11/2026 par le Studio, puis le 27/11/2026 (la version
+              de production mesuree est 2.4.0)
 Un bloc reste a remplir par le proprietaire (VIDEO) : il est marque
               [[A_COMPLETER_PAR_LE_PROPRIETAIRE : ...]] et regroupe en fin de
               fichier. Le lien d'installation, lui, est deja dans le bloc
