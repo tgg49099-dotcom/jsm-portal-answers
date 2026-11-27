@@ -1,6 +1,6 @@
 {
   "quoi": "Run of the real second tool of \"JSM Portal Answers\" against the real portal, with request type names that are not exact",
-  "date": "2026-11-26T05:41:40.064Z",
+  "date": "2026-11-26T23:56:14.158Z",
   "site": "https://tgg-dev.atlassian.net",
   "transport": "asUser() proxied to the REST API of the site with the caller credentials; every call is a GET, asApp() throws",
   "cas": [
